@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: Poppins, Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #EAEAEA;
+
+}
+
+body {
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.style-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #95a5ae;
+    width: 110%;
+    height: 22rem;
+    z-index: -1;
+    overflow: hidden;
+    /* object-fit: cover;
+    transform: rotateZ(-5deg) translateY(-4rem) translateX(-1rem); */
+
+}

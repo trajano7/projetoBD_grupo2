@@ -1,0 +1,82 @@
+form {
+  width: 90%;
+  max-width: 50rem;
+  margin: 3rem auto;
+  padding: 2rem 3rem;
+  padding-bottom: 3rem;
+  background-color: #34393c;
+  border-radius: 8px;
+  box-shadow: 0 0 16px 1px rgba(0, 0, 0, 0.2);
+  z-index: 4;
+}
+
+form h2 {
+  margin: 0;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.control-row {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.select select {
+  border-radius: 4px 0 0 4px;
+  padding: 0.8rem;
+  border: none;
+}
+
+.select {
+  width: 20%;
+}
+
+.input {
+  width: 100%;
+  /* margin-right: 0.8rem; */
+  margin-left: 0.05rem;
+}
+
+.input input {
+  border-radius: 0 4px 4px 0;
+  padding: 0.84rem;
+  width: 100%;
+}
+
+.searchButton {
+  font-size: 1.1rem;
+  padding: 0.75rem;
+  background-color: #f2f5f5;
+  color: #34393c;
+}
+
+.searchButton:hover,
+.searchButton:active {
+  background-color: #d9dddd;
+  color: #5d666b;
+}
+
+
+.radio-box {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+  margin-top: .5rem;
+}
+
+.radio label {
+  display: inline-block;
+}
+
+.radio input {
+  width: auto;
+  display: inline-block;  
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}

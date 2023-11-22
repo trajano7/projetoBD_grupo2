@@ -1,0 +1,17 @@
+.searchContainer {
+  border-radius: 3px;
+  margin-top: 11.7rem;
+  /* z-index: 4; */
+}
+
+.welcome {
+  padding: 0rem;
+  background-color: #95a5ae;
+  width: 100%;
+  /* text-align: center; */
+  /* position: relative;
+  height: 20rem; */
+  display: flex;
+  flex-direction: column;
+  margin-top: 10rem;
+}
