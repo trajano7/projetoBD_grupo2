@@ -1,0 +1,63 @@
+.result {
+    background: #e9ebec;
+    color: #34393c;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.10);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 0;
+    margin-bottom: 2rem;
+}
+
+.result-info {
+  display: flex;
+}
+
+.info {
+  text-align: left;
+}
+
+.info h3 {
+  margin: 0;
+}
+
+.book-info {
+  color: #34393cc9;
+  margin: 0;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+img {
+  max-width: 200px;
+  max-height: 200px;
+  margin-right: 2.5rem;
+}
+
+.details {
+  color: #34393cec;
+  display: flex;
+  gap: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.details-title {
+  font-weight: bold;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: .5rem;
+}
+
+.actions button {
+    background-color: #34393c;
+    padding: .7rem;
+}
+
+.actions button:disabled {
+    background-color: #34393c56;
+    color: #ffffff56;
+    cursor: default;
+}

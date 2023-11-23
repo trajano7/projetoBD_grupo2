@@ -9,13 +9,14 @@ import ErrorPage from "./pages/Error";
 import HomePage from "./pages/Home";
 import RootLayout from "./pages/Root";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { action as searchAction } from "./components/SearchForm";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     errorElement: <ErrorPage />,
-    children: [{ index: true, element: <HomePage /> }],
+    children: [{ index: true, element: <HomePage />, action: searchAction }],
   },
 ]);
 
