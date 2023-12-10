@@ -15,3 +15,17 @@
   flex-direction: column;
   margin-top: 10rem;
 }
+
+.style-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #95a5ae;
+  width: 110%;
+  height: 22rem;
+  z-index: -1;
+  overflow: hidden;
+  /* object-fit: cover;
+  transform: rotateZ(-5deg) translateY(-4rem) translateX(-1rem); */
+
+}

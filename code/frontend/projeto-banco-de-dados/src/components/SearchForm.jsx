@@ -1,10 +1,15 @@
-import { Form, redirect } from "react-router-dom";
+import { Form, redirect, useFetcher } from "react-router-dom";
 import useInput from "../hooks/use-input";
 import Input from "./Input";
 import classes from "./SearchForm.module.css";
 import Button from "./UI/Button";
+import { useDispatch } from "react-redux";
+import { fetchSearchedData } from "../store/searchResult-actions";
 
 const SearchForm = (props) => {
+  const fetcher = useFetcher();
+  const dispatch = useDispatch();
+
   const {
     value: enteredSearch,
     hasError: searchInputHasError,
@@ -12,7 +17,7 @@ const SearchForm = (props) => {
     valueChangeHandler: searchChangedHandler,
     valueBlurHandler: searchBlurHandler,
     resetInput: resetsearchInput,
-  } = useInput((value) => value.trim() !== "", "Procure por um recurso...");
+  } = useInput((value) => value.trim() !== "");
 
   const {
     value: enteredCategoria,
@@ -21,7 +26,7 @@ const SearchForm = (props) => {
     valueChangeHandler: categoriaChangedHandler,
     valueBlurHandler: categoriaBlurHandler,
     resetInput: resetCategoriaInput,
-  } = useInput((value) => value.trim() !== "", "Procure por um recurso...");
+  } = useInput((value) => value.trim() !== "", "Livros");
 
   const {
     value: enteredFiltro,
@@ -30,14 +35,26 @@ const SearchForm = (props) => {
     valueChangeHandler: filtroChangedHandler,
     valueBlurHandler: filtroBlurHandler,
     resetInput: resetFiltroInput,
-  } = useInput((value) => value.trim() !== "");
+  } = useInput((value) => value.trim() !== "", "Ambos");
 
   const submitSearchHandler = (event) => {
-    event.preventDefault()
-  }
+    event.preventDefault();
+
+    if (searchInputHasError) {
+      window.alert('Pesquisa inválida! O campo de pesquisa não pode estar vazio.')
+      return;
+    }
+
+    let searchInfo = { categoria: enteredCategoria, name: enteredSearch };
+    if (enteredCategoria === "Livros") {
+      searchInfo = { ...searchInfo, filtro: enteredFiltro };
+    }
+
+    dispatch(fetchSearchedData(searchInfo));
+  };
 
   return (
-    <Form method="post" >
+    <form className={classes.form} onSubmit={submitSearchHandler}>
       <h2>Pesquisar por Recursos</h2>
       <div className={classes["control-row"]}>
         <Input
@@ -54,15 +71,15 @@ const SearchForm = (props) => {
           selector={false}
           newClasses={classes.input}
           id="search"
-          type="text"
+          type="search"
           name="search"
           value={enteredSearch}
           onChange={searchChangedHandler}
           onBlur={searchBlurHandler}
         />
       </div>
-      {(enteredCategoria === "Livros" || enteredCategoria === "") && (
-        <div className={classes['radio-box']}>
+      {enteredCategoria === "Livros" && (
+        <div className={classes["radio-box"]}>
           <div>Pesquisar por: </div>
           <Input
             label="Título"
@@ -74,6 +91,7 @@ const SearchForm = (props) => {
             value="Título"
             onChange={filtroChangedHandler}
             onBlur={filtroBlurHandler}
+            checked={enteredFiltro === "Título"}
           />
           <Input
             label="Autor"
@@ -85,6 +103,7 @@ const SearchForm = (props) => {
             value="Autor"
             onChange={filtroChangedHandler}
             onBlur={filtroBlurHandler}
+            checked={enteredFiltro === "Autor"}
           />
           <Input
             label="Ambos"
@@ -101,28 +120,27 @@ const SearchForm = (props) => {
         </div>
       )}
       <div className={classes.actions}>
-        <Button className={classes.searchButton}>
-          Pesquisar
-        </Button>
+        <Button className={classes.searchButton}>Pesquisar</Button>
       </div>
-    </Form>
+    </form>
   );
 };
 
 export default SearchForm;
 
-export async function action({request, params}) {
-  const data = await request.formData() 
-  const searchData = {
-    search: data.get('search'),
-    categoria: data.get('categoria'),
-    filtro: data.get('filtro_livro')
-  }
+export async function action({ request, params }) {
+  const data = await request.formData();
+  // const searchData = {
+  //   search: data.get("search"),
+  //   categoria: data.get("categoria"),
+  //   filtro: data.get("filtro_livro"),
+  // };
+  console.log(data.get("searchText"));
 
-  console.log("teste")
-  console.log(searchData);
+  console.log("teste");
+  // console.log(searchData);
 
   // Fetch do eventData ...
 
-  return redirect('/');
+  // return redirect('/');
 }

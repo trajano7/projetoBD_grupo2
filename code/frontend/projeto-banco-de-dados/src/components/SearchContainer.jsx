@@ -1,14 +1,22 @@
+import { useSelector } from "react-redux";
 import classes from "./SearchContainer.module.css";
 import SearchForm from "./SearchForm";
 
 const SearchContainer = (props) => {
-  const onSubmit = (data) => console.log(data);
+  const loginInfo = useSelector((state) => state.login);
+  let welcome = 'Bem vindo!';
+  if (loginInfo.isLoggedIn) {
+    welcome = `Bem vindo, ${loginInfo.userInfo.name}!`;
+  }
 
   return (
-    <div className={classes.searchContainer} >
-      <h2>Bem vindo, Affonso</h2>
-      <SearchForm />
-    </div>
+    <>
+      <div className={classes["style-box"]}/>
+      <div className={classes.searchContainer}>
+        <h2>{welcome}</h2>
+        <SearchForm />
+      </div>
+    </>
   );
 };
 

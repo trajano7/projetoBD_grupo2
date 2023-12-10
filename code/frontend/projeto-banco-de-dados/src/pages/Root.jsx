@@ -5,7 +5,6 @@ const RootPage = (props) => {
   return (
     <>
       <MainNavigation />
-      <div className="style-box" />
       <main>
         <Outlet />
       </main>

@@ -1,22 +1,34 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import Button from "./components/UI/Button";
-import Teste from "./components/Teste";
 
 import ErrorPage from "./pages/Error";
 import HomePage from "./pages/Home";
 import RootLayout from "./pages/Root";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { action as searchAction } from "./components/SearchForm";
+import NewUserPage from "./pages/NewUser";
+import { action as newUserAction } from "./components/UserForm";
+import NewBookPage from "./pages/NewBook";
+import { action as newBookAction } from "./components/BookForm";
+import NewMaterialPage from "./pages/NewMaterial";
+import { action as newMaterialAction } from "./components/MaterialForm";
+import MyProfilePage from "./pages/MyProfile";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     errorElement: <ErrorPage />,
-    children: [{ index: true, element: <HomePage />, action: searchAction }],
+    children: [
+      { index: true, element: <HomePage />, action: searchAction },
+      { path: "/novoUsuario", element: <NewUserPage />, action: newUserAction },
+      { path: "/novoLivro", element: <NewBookPage />, action: newBookAction },
+      {
+        path: "/novoMaterial",
+        element: <NewMaterialPage />,
+        action: newMaterialAction,
+      },
+      { path: "/meuPerfil", element: <MyProfilePage /> },
+    ],
   },
 ]);
 

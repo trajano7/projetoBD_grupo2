@@ -1,0 +1,38 @@
+.userProfileInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #34393c;
+  /* background-color: #e9ebec; */
+  width: 50%;
+  margin: 0 auto;
+  padding: 1rem;
+  /* box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1); */
+  margin-bottom: 3rem;
+}
+
+.profileContainer {
+  text-align: center;
+}
+
+.profilePhoto {
+  margin: 0 auto;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  border: 2px solid #34393c;
+}
+
+.details {
+  color: #34393cec;
+  display: flex;
+  gap: 4rem;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.details-title {
+  font-weight: bold;
+}

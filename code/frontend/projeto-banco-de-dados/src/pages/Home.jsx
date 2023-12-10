@@ -1,12 +1,17 @@
+import { useSelector } from "react-redux";
 import SearchContainer from "../components/SearchContainer";
 import SearchResult from "../components/SearchResult";
 
 const HomePage = (props) => {
-    return <main>
+  const searchStatus = useSelector((state) => state.searchResult.searchStatus);
+  const showResults = searchStatus.status !== 'initial' && searchStatus.status !== 'error';
+
+  return (
+    <main>
       <SearchContainer />
-      <SearchResult />
+      {showResults && <SearchResult />}
     </main>
-}
+  );
+};
 
 export default HomePage;
-
