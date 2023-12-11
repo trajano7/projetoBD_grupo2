@@ -117,9 +117,7 @@ const BookForm = (props) => {
   };
 
   return (
-    <Page>
       <form className={classes.form} onSubmit={submitFormHandler}>
-        <h2>Cadastrar Material</h2>
         <div className={classes["control-row"]}>
           <div className={classes.control}>
             <Input
@@ -254,7 +252,6 @@ const BookForm = (props) => {
           <Button disabled={!valuesIsValid}>Cadastrar</Button>
         </div>
       </form>
-    </Page>
   );
 };
 

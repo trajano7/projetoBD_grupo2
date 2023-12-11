@@ -1,8 +1,19 @@
 .page-box {
   margin: 0 auto;
   height: 100%;
+  min-height: 100vh;
   padding-top: 5.3rem;
   background-color: #dfe1e3;
   width: 70%;
   overflow:auto;
+}
+
+.page-header {
+  color: #34393c;
+  border-bottom: 1px solid #34393c;
+  width: 20rem;
+  margin: 0 auto;
+  padding-bottom: 1.4rem;
+  margin-bottom: 2rem;
+  margin-top: 3rem;
 }

@@ -20,13 +20,13 @@
 
 .info h3 {
   margin: 0;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
 }
 
-.book-info {
+.id {
   color: #34393cc9;
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
   margin-bottom: 0.5rem;
 }
 
@@ -56,7 +56,7 @@ img {
 
 .actions button {
   background-color: #34393c;
-  padding: 0.7rem;
+  padding: 0.5rem;
 }
 
 .actions button:disabled {

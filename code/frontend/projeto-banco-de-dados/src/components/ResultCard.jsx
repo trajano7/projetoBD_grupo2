@@ -1,7 +1,8 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import classes from "./ResultCard.module.css";
 import Button from "./UI/Button";
 import Card from "./UI/Card";
+import { deleteItem } from "../store/searchResult-actions";
 
 function formatarData(data) {
   const dia = data.getDate().toString().padStart(2, "0");
@@ -12,6 +13,7 @@ function formatarData(data) {
 }
 
 const ResultCard = (props) => {
+  const dispatch = useDispatch();
   const loginInfo = useSelector((state) => state.login);
   const materialDisponivel = props.status === "disponivel";
   const data = new Date(props.data_aquisicao);
@@ -39,6 +41,22 @@ const ResultCard = (props) => {
       </div>
     );
   }
+
+
+  const deleteItemHandler = () => {
+    const proceed = window.confirm(
+      `Você tem certeza que deseja deletar esse item?`
+    );
+
+    if (proceed) {
+      if (props.categoria === "Livro") {
+        dispatch(deleteItem(props.isbn));
+      }
+      else {
+        dispatch(deleteItem(props.ndeserie));
+      }
+    }
+  };
 
   return (
     <div className={classes.result}>
@@ -74,6 +92,7 @@ const ResultCard = (props) => {
       <div className={classes.actions}>
         {isAdmin && (
           <Button
+            onClick={deleteItemHandler}
             disabled={!materialDisponivel}
             className={classes["delete-button"]}
           >

@@ -1,16 +1,16 @@
 import { useSelector } from "react-redux";
-import ResultsList from "./ResultsList";
-import classes from "./SearchResult.module.css";
+import SearchUser from "../components/SearchUser";
+import Page from "../components/UI/Page";
+import UsersList from "../components/UsersList";
 import { useEffect } from "react";
 
-const SearchResult = (props) => {
-  const resultsList = useSelector((state) => state.searchResult.resultsList);
-  const searchStatus = useSelector((state) => state.searchResult.searchStatus);
+const ManageUsersPage = (props) => {
+  const resultsList = useSelector((state) => state.users.usersList);
+  const searchStatus = useSelector((state) => state.users.searchUsersStatus);
 
-  console.log('Rapadura')
+  console.log("Aqui: ", resultsList);
 
-  let results = <ResultsList results={resultsList} />;
-  console.log(resultsList)
+  let results = <UsersList results={resultsList} />;
   useEffect(() => {
     if (searchStatus.status === "loading") {
       results = (
@@ -35,11 +35,11 @@ const SearchResult = (props) => {
   }, [resultsList, searchStatus]);
 
   return (
-    <div className={classes.results}>
-      {searchStatus.status !== "loading" && <h2>Resultados</h2>}
+    <Page title="Gerenciar Usuários">
+      <SearchUser />
       {results}
-    </div>
+    </Page>
   );
 };
 
-export default SearchResult;
+export default ManageUsersPage;

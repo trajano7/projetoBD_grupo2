@@ -1,0 +1,37 @@
+.form {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50%;
+  margin-bottom: 3rem;
+}
+
+.form h3 {
+  color: #34393c;
+}
+
+.control-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.select {
+  /* flex: 1; Ocupa todo o espaço disponível */
+  margin-right: 8px; /* Adicione margem entre o select e o input */
+  width: fit-content;
+}
+
+.input {
+  flex: 3; /* Ocupa o dobro do espaço do select */
+  margin-right: 8px; /* Adicione margem entre o input e o botão de pesquisa */
+  min-width: 10rem
+}
+
+.searchButton {
+  flex: 2; /* Ocupa o mesmo espaço do select */
+  background-color: #34393c;
+}

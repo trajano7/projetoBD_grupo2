@@ -6,7 +6,7 @@ const SearchContainer = (props) => {
   const loginInfo = useSelector((state) => state.login);
   let welcome = 'Bem vindo!';
   if (loginInfo.isLoggedIn) {
-    welcome = `Bem vindo, ${loginInfo.userInfo.name}!`;
+    welcome = `Bem vindo, ${loginInfo.userInfo.nome}!`;
   }
 
   return (

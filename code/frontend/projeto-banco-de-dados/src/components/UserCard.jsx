@@ -1,6 +1,37 @@
+import { useDispatch, useSelector } from "react-redux";
 import classes from "./UserCard.module.css";
+import Button from "./UI/Button";
+import { deleteUser } from "../store/users-actions";
+import { useNavigate } from "react-router-dom";
 
 const UserCard = (props) => {
+  const navigate = useNavigate();
+  const loginInfo = useSelector((state) => state.login);
+  const dispatch = useDispatch();
+
+  let isAdmin = false;
+  if (loginInfo.isLoggedIn) {
+    if (loginInfo.userInfo.cargo === "Admin") {
+      isAdmin = true;
+    }
+  }
+
+  const deleteUserHandler = () => {
+    const proceed = window.confirm(
+      `Você tem certeza que deseja deletar o usuário de ID ${props.id}`
+    );
+
+    if (proceed) {
+      dispatch(deleteUser(props.id));
+    }
+  };
+
+  const editUserHandler = () => {
+    navigate(`/gerenciarUsuarios/${props.id}`)
+  };
+
+  const nomeCompleto = props.nome + " " + props.sobrenome;
+
   return (
     <div className={classes.user}>
       <div className={classes["user-info"]}>
@@ -11,7 +42,8 @@ const UserCard = (props) => {
           alt={"cover"}
         />
         <div className={classes.info}>
-          <h3>{props.nomeCompleto}</h3>
+          <h3>{nomeCompleto}</h3>
+          <p className={classes.id}>{`ID: ${props.id}`}</p>
           <div className={classes.details}>
             <div>
               <div className={classes["details-title"]}>Username:</div>
@@ -23,6 +55,19 @@ const UserCard = (props) => {
             </div>
           </div>
         </div>
+      </div>
+      <div className={classes.actions}>
+        {isAdmin && (
+          <>
+            <Button
+              onClick={deleteUserHandler}
+              className={classes["delete-button"]}
+            >
+              Deletar
+            </Button>
+            <Button onClick={editUserHandler}>Editar</Button>
+          </>
+        )}
       </div>
     </div>
   );

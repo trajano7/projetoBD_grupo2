@@ -1,0 +1,59 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  margin: 0 auto;
+  /* margin-top: 10rem; */
+  color: red;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.control {
+  width: 100%;
+}
+
+.form h3 {
+  color: #34393c;
+  border-bottom: 1px solid #34393c;
+  margin: 0 auto;
+  padding-bottom: 1rem;
+  padding: 0 2rem 1rem 2em;
+  margin-bottom: 1rem;
+}
+
+.input {
+  margin: 0;
+  width: 100%;
+  min-width: 15rem;
+}
+
+.button {
+  background-color: #34393c;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.cancel-button {
+  margin: 0;
+  background-color: rgb(206, 35, 35);
+}
+
+.cancel-button:hover {
+  background-color: rgb(160, 27, 27);
+  color: #e9e9e9;
+}
+
+.control-error {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  color: rgb(209, 72, 72);
+  font-size: 0.8rem;
+}
+
+.control-error p {
+  margin: 0;
+  padding: 0;
+}

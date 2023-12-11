@@ -3,6 +3,9 @@ import { NavLink, useLocation } from "react-router-dom";
 import classes from "./MainNavigation.module.css";
 import Button from "./UI/Button";
 import Dropdown from "./UI/Dropdown";
+import { useDispatch, useSelector } from "react-redux";
+import { uiActions } from "../store/ui-slice";
+import { loginActions } from "../store/login-slice";
 
 const itensCadastro = [
   <NavLink
@@ -22,8 +25,26 @@ const itensCadastro = [
 ];
 
 function MainNavigation() {
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
+  const userRole = useSelector((state) => state.login.userInfo.cargo);
+  const dispatch = useDispatch();
   const location = useLocation();
   console.log(location.pathname);
+
+  let isAdmin = "";
+  let isChefe = "";
+  if (isLoggedIn) {
+    isAdmin = userRole === "Administrador";
+    isChefe = userRole === "Chefe de Laboratório";
+  }
+
+  const openModalHandler = () => {
+    dispatch(uiActions.toggle());
+  };
+
+  const logoutHandler = () => {
+    dispatch(loginActions.logout());
+  };
 
   return (
     <header className={classes.header}>
@@ -44,67 +65,84 @@ function MainNavigation() {
                 Home
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/novoUsuario"
-                className={({ isActive }) =>
-                  isActive ? classes.active : undefined
-                }
-                end
-              >
-                Cadastrar Usuário
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/novoLivro"
-                className={({ isActive }) =>
-                  isActive ? classes.active : undefined
-                }
-                end
-              >
-                Cadastrar Livro
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/novoMaterial"
-                className={({ isActive }) =>
-                  isActive ? classes.active : undefined
-                }
-                end
-              >
-                Cadastrar Material
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/products"
-                className={({ isActive }) =>
-                  isActive ? classes.active : undefined
-                }
-                end
-              >
-                Meus Empréstimos
-              </NavLink>
-            </li>
+            {isLoggedIn && isAdmin && (
+              <>
+                <li>
+                  <NavLink
+                    to="/novoUsuario"
+                    className={({ isActive }) =>
+                      isActive ? classes.active : undefined
+                    }
+                    end
+                  >
+                    Cadastrar Usuário
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/gerenciarUsuarios"
+                    className={({ isActive }) =>
+                      isActive ? classes.active : undefined
+                    }
+                    end
+                  >
+                    Gerenciar Usuários
+                  </NavLink>
+                </li>
+              </>
+            )}
+            {isLoggedIn && (isAdmin || isChefe) && (
+              <>
+                <li>
+                  <NavLink
+                    to="/novoLivro"
+                    className={({ isActive }) =>
+                      isActive ? classes.active : undefined
+                    }
+                    end
+                  >
+                    Cadastrar Livro
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/novoMaterial"
+                    className={({ isActive }) =>
+                      isActive ? classes.active : undefined
+                    }
+                    end
+                  >
+                    Cadastrar Material
+                  </NavLink>
+                </li>
+              </>
+            )}
+            {isLoggedIn && (
+              <>
+                <li>
+                  <NavLink
+                    to="/meuPerfil"
+                    className={({ isActive }) =>
+                      isActive ? classes.active : undefined
+                    }
+                    end
+                  >
+                    Perfil
+                  </NavLink>
+                </li>
+                <li>
+                  <Button onClick={logoutHandler}>Sair</Button>
+                </li>
+              </>
+            )}
+            {!isLoggedIn && (
+              <li>
+                <Button onClick={openModalHandler}>Entrar</Button>
+              </li>
+            )}
             {/* <li>
               <Dropdown title="Cadastrar" items={itensCadastro}></Dropdown>
             </li> */}
-            <li>
-              <NavLink
-                to="/meuPerfil"
-                className={({ isActive }) =>
-                  isActive ? classes.active : undefined
-                }
-                end
-              >
-                Perfil
-              </NavLink>
-            </li>
-            <li>
-              <Button>Sair</Button>
-            </li>
           </ul>
         </nav>
       </div>

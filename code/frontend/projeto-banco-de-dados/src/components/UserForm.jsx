@@ -30,7 +30,10 @@ const UserForm = (props) => {
     valueChangeHandler: nameChangedHandler,
     valueBlurHandler: nameBlurHandler,
     resetInput: resetName,
-  } = useInput((value) => value.trim() !== "");
+  } = useInput(
+    (value) => value.trim() !== "",
+    props.user ? props.user.nome : ""
+  );
 
   const {
     value: enteredSurname,
@@ -39,7 +42,10 @@ const UserForm = (props) => {
     valueChangeHandler: surnameChangedHandler,
     valueBlurHandler: surnameBlurHandler,
     resetInput: resetSurname,
-  } = useInput((value) => value.trim() !== "");
+  } = useInput(
+    (value) => value.trim() !== "",
+    props.user ? props.user.sobrenome : ""
+  );
 
   const {
     value: enteredUsername,
@@ -48,7 +54,10 @@ const UserForm = (props) => {
     valueChangeHandler: usernameChangedHandler,
     valueBlurHandler: usernameBlurHandler,
     resetInput: resetUsername,
-  } = useInput((value) => value.trim() !== "");
+  } = useInput(
+    (value) => value.trim() !== "",
+    props.user ? props.user.username : ""
+  );
 
   const {
     value: enteredPassword,
@@ -66,7 +75,10 @@ const UserForm = (props) => {
     valueChangeHandler: URIChangedHandler,
     valueBlurHandler: URIBlurHandler,
     resetInput: resetURI,
-  } = useInput((value) => value.trim() !== "");
+  } = useInput(
+    (value) => value.trim() !== "",
+    props.user ? props.user.uri : ""
+  );
 
   const {
     value: enteredRole,
@@ -75,10 +87,16 @@ const UserForm = (props) => {
     valueChangeHandler: roleChangedHandler,
     valueBlurHandler: roleBlurHandler,
     resetInput: resetRole,
-  } = useInput((value) => value.trim() !== "", "Membro");
+  } = useInput(
+    (value) => value.trim() !== "",
+    props.user ? props.user.cargo : "Membro do Laboratório"
+  );
 
   const cancelRegistration = () => {
-    navigate("/");
+    if (!props.user) {
+      navigate("/");
+    }
+    navigate("/gerenciarUsuarios");
   };
 
   const valuesIsValid =
@@ -110,145 +128,144 @@ const UserForm = (props) => {
   };
 
   return (
-    <Page>
-      <form className={classes.form} onSubmit={submitFormHandler}>
-        <h2>Cadastra Usuário</h2>
-        <div className={classes["control-row"]}>
-          <div className={classes.control}>
-            <Input
-              selector={false}
-              newClasses={classes.input}
-              id="nome"
-              type="text"
-              name="nome"
-              label="Nome"
-              value={enteredName}
-              onChange={nameChangedHandler}
-              onBlur={nameBlurHandler}
-            />
-            <div className={classes["control-error"]}>
-              {nameHasError && <p>*Nome obrigatório.</p>}
-            </div>
-          </div>
-          <div className={classes["control"]}>
-            <Input
-              selector={false}
-              newClasses={classes.input}
-              id="sobrenome"
-              type="text"
-              name="sobrenome"
-              label="Sobrenome"
-              value={enteredSurname}
-              onChange={surnameChangedHandler}
-              onBlur={surnameBlurHandler}
-            />
-            <div className={classes["control-error"]}>
-              {surnameHasError && <p>*Sobrenome obrigatório.</p>}
-            </div>
-          </div>
-        </div>
-        <div className={classes["control-row"]}>
-          <div className={classes["control"]}>
-            <Input
-              selector={false}
-              newClasses={classes.input}
-              id="Username"
-              type="text"
-              name="Username"
-              label="Username"
-              value={enteredUsername}
-              onChange={usernameChangedHandler}
-              onBlur={usernameBlurHandler}
-            />
-            <div className={classes["control-error"]}>
-              {usernameHasError && <p>*Nome de usuário obrigatório.</p>}
-            </div>
-          </div>
-          <div className={classes["control"]}>
-            <Input
-              selector={false}
-              newClasses={classes.input}
-              id="senha"
-              type="password"
-              name="senha"
-              label="Senha"
-              value={enteredPassword}
-              onChange={passwordChangedHandler}
-              onBlur={passwordBlurHandler}
-            />
-            <div className={classes["control-error"]}>
-              {passwordHasError && <p>*A senha conter mais de 5 chars.</p>}
-            </div>
+    <form className={classes.form} onSubmit={submitFormHandler}>
+      <div className={classes["control-row"]}>
+        <div className={classes.control}>
+          <Input
+            selector={false}
+            newClasses={classes.input}
+            id="nome"
+            type="text"
+            name="nome"
+            label="Nome"
+            value={enteredName}
+            onChange={nameChangedHandler}
+            onBlur={nameBlurHandler}
+          />
+          <div className={classes["control-error"]}>
+            {nameHasError && <p>*Nome obrigatório.</p>}
           </div>
         </div>
         <div className={classes["control"]}>
           <Input
             selector={false}
-            id="URI"
-            type="url"
-            name="URI"
-            label="Foto de Perfíl (URI)"
-            value={enteredURI}
-            onChange={URIChangedHandler}
-            onBlur={URIBlurHandler}
+            newClasses={classes.input}
+            id="sobrenome"
+            type="text"
+            name="sobrenome"
+            label="Sobrenome"
+            value={enteredSurname}
+            onChange={surnameChangedHandler}
+            onBlur={surnameBlurHandler}
           />
           <div className={classes["control-error"]}>
-            {URIHasError && <p>*URI da foto obrigatório.</p>}
+            {surnameHasError && <p>*Sobrenome obrigatório.</p>}
           </div>
         </div>
-        <div className={classes["control-row"]}>
-          <div className={classes["control"]}>
-            <Input
-              label="Membro do Laboratório"
-              selector={false}
-              newClasses={classes.radio}
-              id="membro"
-              type="radio"
-              name="cargo"
-              value="Membro"
-              onChange={roleChangedHandler}
-              onBlur={roleBlurHandler}
-              checked={enteredRole === "Membro"}
-            />
-          </div>
-          <div className={classes["control"]}>
-            <Input
-              label="Chefe de Laboratório"
-              selector={false}
-              newClasses={classes.radio}
-              id="chefe"
-              type="radio"
-              name="cargo"
-              value="Chefe"
-              onChange={roleChangedHandler}
-              onBlur={roleBlurHandler}
-            />
-          </div>
-          <div className={classes["control"]}>
-            <Input
-              label="Administrador"
-              selector={false}
-              newClasses={classes.radio}
-              id="admin"
-              type="radio"
-              name="cargo"
-              value="Admin"
-              onChange={roleChangedHandler}
-              onBlur={roleBlurHandler}
-            />
+      </div>
+      <div className={classes["control-row"]}>
+        <div className={classes["control"]}>
+          <Input
+            selector={false}
+            newClasses={classes.input}
+            id="Username"
+            type="text"
+            name="Username"
+            label="Username"
+            value={enteredUsername}
+            onChange={usernameChangedHandler}
+            onBlur={usernameBlurHandler}
+          />
+          <div className={classes["control-error"]}>
+            {usernameHasError && <p>*Nome de usuário obrigatório.</p>}
           </div>
         </div>
-        <div className={classes.actions}>
-          <Button
-            onClick={cancelRegistration}
-            className={classes["delete-button"]}
-          >
-            Cancelar
-          </Button>
-          <Button disabled={!valuesIsValid}>Cadastrar</Button>
+        <div className={classes["control"]}>
+          <Input
+            selector={false}
+            newClasses={classes.input}
+            id="senha"
+            type="password"
+            name="senha"
+            label="Senha"
+            value={enteredPassword}
+            onChange={passwordChangedHandler}
+            onBlur={passwordBlurHandler}
+          />
+          <div className={classes["control-error"]}>
+            {passwordHasError && <p>*A senha conter mais de 5 chars.</p>}
+          </div>
         </div>
-      </form>
-    </Page>
+      </div>
+      <div className={classes["control"]}>
+        <Input
+          selector={false}
+          id="URI"
+          type="url"
+          name="URI"
+          label="Foto de Perfíl (URI)"
+          value={enteredURI}
+          onChange={URIChangedHandler}
+          onBlur={URIBlurHandler}
+        />
+        <div className={classes["control-error"]}>
+          {URIHasError && <p>*URI da foto obrigatório.</p>}
+        </div>
+      </div>
+      <div className={classes["control-row"]}>
+        <div className={classes["control"]}>
+          <Input
+            label="Membro do Laboratório"
+            selector={false}
+            newClasses={classes.radio}
+            id="membro"
+            type="radio"
+            name="cargo"
+            value="Membro do Laboratório"
+            onChange={roleChangedHandler}
+            onBlur={roleBlurHandler}
+            checked={enteredRole === "Membro do Laboratório"}
+          />
+        </div>
+        <div className={classes["control"]}>
+          <Input
+            label="Chefe de Laboratório"
+            selector={false}
+            newClasses={classes.radio}
+            id="chefe"
+            type="radio"
+            name="cargo"
+            value="Chefe de Laboratório"
+            onChange={roleChangedHandler}
+            onBlur={roleBlurHandler}
+            checked={enteredRole === "Chefe de Laboratório"}
+          />
+        </div>
+        <div className={classes["control"]}>
+          <Input
+            label="Administrador"
+            selector={false}
+            newClasses={classes.radio}
+            id="admin"
+            type="radio"
+            name="cargo"
+            value="Administrador"
+            onChange={roleChangedHandler}
+            onBlur={roleBlurHandler}
+            checked={enteredRole === "Administrador"}
+          />
+        </div>
+      </div>
+      <div className={classes.actions}>
+        <Button
+          onClick={cancelRegistration}
+          className={classes["delete-button"]}
+        >
+          Cancelar
+        </Button>
+        <Button disabled={!valuesIsValid}>Cadastrar</Button>
+      </div>
+    </form>
   );
 };
 

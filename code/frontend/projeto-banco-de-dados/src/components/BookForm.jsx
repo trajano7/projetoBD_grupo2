@@ -140,178 +140,175 @@ const BookForm = (props) => {
   };
 
   return (
-    <Page>
-      <form className={classes.form} onSubmit={submitFormHandler}>
-        <h2>Cadastrar Livro</h2>
-        <div className={classes["control-row"]}>
-          <div className={classes.control}>
-            <Input
-              selector={false}
-              newClasses={classes.input}
-              id="title"
-              type="text"
-              name="title"
-              label="Título"
-              value={enteredTitle}
-              onChange={titleChangedHandler}
-              onBlur={titleBlurHandler}
-            />
-            <div className={classes["control-error"]}>
-              {titleHasError && <p>*Título obrigatório.</p>}
-            </div>
-          </div>
-          <div className={classes["control"]}>
-            <Input
-              selector={false}
-              newClasses={classes.input}
-              id="author"
-              type="text"
-              name="author"
-              label="Autor"
-              value={enteredAuthor}
-              onChange={authorChangedHandler}
-              onBlur={authorBlurHandler}
-            />
-            <div className={classes["control-error"]}>
-              {authorHasError && <p>*Autor obrigatório.</p>}
-            </div>
-          </div>
-        </div>
-        <div className={classes["control-row"]}>
-          <div className={classes.control}>
-            <Input
-              selector={false}
-              newClasses={classes.input}
-              id="isbn"
-              type="text"
-              name="isbn"
-              label="ISBN"
-              value={enteredISBN}
-              onChange={isbnChangedHandler}
-              onBlur={isbnBlurHandler}
-            />
-            <div className={classes["control-error"]}>
-              {isbnHasError && <p>*ISBN obrigatório.</p>}
-            </div>
-          </div>
-          <div className={classes["control"]}>
-            <Input
-              selector={false}
-              newClasses={classes.input}
-              id="data"
-              type="date"
-              name="data"
-              label="Data de Aquisição"
-              value={enteredData}
-              onChange={dataChangedHandler}
-              onBlur={dataBlurHandler}
-            />
-            <div className={classes["control-error"]}>
-              {dataHasError && <p>*Data de Aquisição obrigatório.</p>}
-            </div>
-          </div>
-        </div>
-        <div className={classes["control-row"]}>
-          <div className={classes.control}>
-            <Input
-              selector={false}
-              newClasses={classes.input}
-              id="location"
-              type="text"
-              name="location"
-              label="Localização do Material"
-              value={enteredLocation}
-              onChange={locationChangedHandler}
-              onBlur={locationBlurHandler}
-            />
-            <div className={classes["control-error"]}>
-              {locationHasError && <p>*Localizacao do Material obrigatório.</p>}
-            </div>
-          </div>
-          <div className={classes.control}>
-            <Input
-              selector={false}
-              newClasses={classes.input}
-              id="URI"
-              type="url"
-              name="URI"
-              label="Foto de Perfíl (URI)"
-              value={enteredURI}
-              onChange={URIChangedHandler}
-              onBlur={URIBlurHandler}
-            />
-            <div className={classes["control-error"]}>
-              {URIHasError && <p>*URI da foto obrigatório.</p>}
-            </div>
-          </div>
-        </div>
-        <div className={classes["description"]}>
-          <label htmlFor="description">Descrição do Material</label>
-          <textarea
-            rows="5"
-            id="description"
-            name="description"
-            value={enteredDescription}
-            onChange={descriptionChangedHandler}
-            onBlur={descriptionBlurHandler}
+    <form className={classes.form} onSubmit={submitFormHandler}>
+      <div className={classes["control-row"]}>
+        <div className={classes.control}>
+          <Input
+            selector={false}
+            newClasses={classes.input}
+            id="title"
+            type="text"
+            name="title"
+            label="Título"
+            value={enteredTitle}
+            onChange={titleChangedHandler}
+            onBlur={titleBlurHandler}
           />
           <div className={classes["control-error"]}>
-            {descriptionHasError && <p>*Descrição do Material obrigatório.</p>}
+            {titleHasError && <p>*Título obrigatório.</p>}
           </div>
         </div>
-        <div className={`${classes["control-row"]} ${classes.estado}`}>
-          <div className={classes["control"]}>
-            <Input
-              label="Mal Conservado"
-              selector={false}
-              newClasses={classes.radio}
-              id="malconservado"
-              type="radio"
-              name="estado"
-              value="Mal Conservado"
-              onChange={estadoChangedHandler}
-              onBlur={estadoBlurHandler}
-            />
-          </div>
-          <div className={classes["control"]}>
-            <Input
-              label="Regular"
-              selector={false}
-              newClasses={classes.radio}
-              id="regular"
-              type="radio"
-              name="estado"
-              value="Regular"
-              onChange={estadoChangedHandler}
-              onBlur={estadoBlurHandler}
-              checked={enteredEstado === "Regular"}
-            />
-          </div>
-          <div className={classes["control"]}>
-            <Input
-              label="Administrador"
-              selector={false}
-              newClasses={classes.radio}
-              id="bemconservado"
-              type="radio"
-              name="estado"
-              value="Bem Conservado"
-              onChange={estadoChangedHandler}
-              onBlur={estadoBlurHandler}
-            />
+        <div className={classes["control"]}>
+          <Input
+            selector={false}
+            newClasses={classes.input}
+            id="author"
+            type="text"
+            name="author"
+            label="Autor"
+            value={enteredAuthor}
+            onChange={authorChangedHandler}
+            onBlur={authorBlurHandler}
+          />
+          <div className={classes["control-error"]}>
+            {authorHasError && <p>*Autor obrigatório.</p>}
           </div>
         </div>
-        <div className={classes.actions}>
-          <Button
-            onClick={cancelRegistration}
-            className={classes["delete-button"]}
-          >
-            Cancelar
-          </Button>
-          <Button disabled={!valuesIsValid}>Cadastrar</Button>
+      </div>
+      <div className={classes["control-row"]}>
+        <div className={classes.control}>
+          <Input
+            selector={false}
+            newClasses={classes.input}
+            id="isbn"
+            type="text"
+            name="isbn"
+            label="ISBN"
+            value={enteredISBN}
+            onChange={isbnChangedHandler}
+            onBlur={isbnBlurHandler}
+          />
+          <div className={classes["control-error"]}>
+            {isbnHasError && <p>*ISBN obrigatório.</p>}
+          </div>
         </div>
-      </form>
-    </Page>
+        <div className={classes["control"]}>
+          <Input
+            selector={false}
+            newClasses={classes.input}
+            id="data"
+            type="date"
+            name="data"
+            label="Data de Aquisição"
+            value={enteredData}
+            onChange={dataChangedHandler}
+            onBlur={dataBlurHandler}
+          />
+          <div className={classes["control-error"]}>
+            {dataHasError && <p>*Data de Aquisição obrigatório.</p>}
+          </div>
+        </div>
+      </div>
+      <div className={classes["control-row"]}>
+        <div className={classes.control}>
+          <Input
+            selector={false}
+            newClasses={classes.input}
+            id="location"
+            type="text"
+            name="location"
+            label="Localização do Material"
+            value={enteredLocation}
+            onChange={locationChangedHandler}
+            onBlur={locationBlurHandler}
+          />
+          <div className={classes["control-error"]}>
+            {locationHasError && <p>*Localizacao do Material obrigatório.</p>}
+          </div>
+        </div>
+        <div className={classes.control}>
+          <Input
+            selector={false}
+            newClasses={classes.input}
+            id="URI"
+            type="url"
+            name="URI"
+            label="Foto de Perfíl (URI)"
+            value={enteredURI}
+            onChange={URIChangedHandler}
+            onBlur={URIBlurHandler}
+          />
+          <div className={classes["control-error"]}>
+            {URIHasError && <p>*URI da foto obrigatório.</p>}
+          </div>
+        </div>
+      </div>
+      <div className={classes["description"]}>
+        <label htmlFor="description">Descrição do Material</label>
+        <textarea
+          rows="5"
+          id="description"
+          name="description"
+          value={enteredDescription}
+          onChange={descriptionChangedHandler}
+          onBlur={descriptionBlurHandler}
+        />
+        <div className={classes["control-error"]}>
+          {descriptionHasError && <p>*Descrição do Material obrigatório.</p>}
+        </div>
+      </div>
+      <div className={`${classes["control-row"]} ${classes.estado}`}>
+        <div className={classes["control"]}>
+          <Input
+            label="Mal Conservado"
+            selector={false}
+            newClasses={classes.radio}
+            id="malconservado"
+            type="radio"
+            name="estado"
+            value="Mal Conservado"
+            onChange={estadoChangedHandler}
+            onBlur={estadoBlurHandler}
+          />
+        </div>
+        <div className={classes["control"]}>
+          <Input
+            label="Regular"
+            selector={false}
+            newClasses={classes.radio}
+            id="regular"
+            type="radio"
+            name="estado"
+            value="Regular"
+            onChange={estadoChangedHandler}
+            onBlur={estadoBlurHandler}
+            checked={enteredEstado === "Regular"}
+          />
+        </div>
+        <div className={classes["control"]}>
+          <Input
+            label="Administrador"
+            selector={false}
+            newClasses={classes.radio}
+            id="bemconservado"
+            type="radio"
+            name="estado"
+            value="Bem Conservado"
+            onChange={estadoChangedHandler}
+            onBlur={estadoBlurHandler}
+          />
+        </div>
+      </div>
+      <div className={classes.actions}>
+        <Button
+          onClick={cancelRegistration}
+          className={classes["delete-button"]}
+        >
+          Cancelar
+        </Button>
+        <Button disabled={!valuesIsValid}>Cadastrar</Button>
+      </div>
+    </form>
   );
 };
 
