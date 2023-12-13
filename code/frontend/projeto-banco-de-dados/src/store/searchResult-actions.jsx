@@ -11,7 +11,7 @@ const DUMMY_RESULTS = [
     status: "disponivel",
     uri: "https://exemplo.com/livro1",
     descricao: "Uma incrível aventura pelo espaço sideral.",
-    categora: "Livro"
+    categora: "Livro",
   },
   {
     titulo: "Harry Potter e a Pedra Filosofal",
@@ -23,7 +23,7 @@ const DUMMY_RESULTS = [
     status: "emprestado",
     uri: "https://exemplo.com/livro2",
     descricao: "O primeiro livro da famosa série de Harry Potter.",
-    categora: "Livro"
+    categora: "Livro",
   },
   {
     titulo: "1984",
@@ -35,7 +35,7 @@ const DUMMY_RESULTS = [
     status: "disponivel",
     uri: "https://exemplo.com/livro3",
     descricao: "Um clássico distópico que faz refletir sobre a sociedade.",
-    categora: "Livro"
+    categora: "Livro",
   },
   {
     titulo: "O Senhor dos Anéis",
@@ -47,7 +47,7 @@ const DUMMY_RESULTS = [
     status: "disponivel",
     uri: "https://exemplo.com/livro4",
     descricao: "Uma épica jornada pela Terra Média.",
-    categora: "Livro"
+    categora: "Livro",
   },
   // Adicione mais objetos conforme necessário
 ];
@@ -61,7 +61,7 @@ const DUMMY_RESULTS2 = [
     status: "disponivel",
     uri: "https://exemplo.com/material1",
     descricao: "Uma incrível aventura pelo espaço sideral.",
-    categoria: "Material"
+    categoria: "Material",
   },
   {
     ndeserie: 123456789,
@@ -71,7 +71,7 @@ const DUMMY_RESULTS2 = [
     status: "disponivel",
     uri: "https://exemplo.com/material2",
     descricao: "Um emocionante mistério a ser desvendado.",
-    categoria: "Material"
+    categoria: "Material",
   },
   {
     ndeserie: 987654321,
@@ -81,7 +81,7 @@ const DUMMY_RESULTS2 = [
     status: "indisponivel",
     uri: "https://exemplo.com/material3",
     descricao: "Uma história fascinante que irá mexer com suas emoções.",
-    categoria: "Material"
+    categoria: "Material",
   },
 
   // Adicione mais objetos conforme necessário
@@ -107,17 +107,40 @@ export const fetchSearchedData = (searchInfo) => {
   };
 };
 
-let erro = false
+let erro = false;
 
 export const deleteItem = (itemID) => {
   return async (dispatch) => {
     console.log(itemID);
     console.log("despachando delete");
     if (erro) {
-        console.log('erro')
-        dispatch(searchResultActions.setSearchStatus({ status: 'error', message: 'Não foi possível deletar o item. Ele está emprestado no momento.' }))
-        return;
+      console.log("erro");
+      dispatch(
+        searchResultActions.setSearchStatus({
+          status: "error",
+          message:
+            "Não foi possível deletar o item. Ele está emprestado no momento.",
+        })
+      );
+      return;
     }
     dispatch(searchResultActions.deleteItem(itemID));
+  };
+};
+
+export const reserveItem = (itemID) => {
+  return async (dispatch) => {
+    if (erro) {
+      console.log("erro");
+      dispatch(
+        searchResultActions.setSearchStatus({
+          status: "error",
+          message:
+            "Não foi possível reservar o item. Ele está emprestado no momento.",
+        })
+      );
+      return;
+    }
+    dispatch(searchResultActions.reserveItem(itemID));
   };
 };

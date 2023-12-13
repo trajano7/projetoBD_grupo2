@@ -5,6 +5,7 @@ import UserProfileInfo from "../components/UserProfileInfo";
 
 import classes from "./MyProfile.module.css";
 import { Await, defer, json, useLoaderData } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const DUMMY_RESULTS = [
   {
@@ -35,14 +36,18 @@ const DUMMY_RESULTS = [
 ];
 
 const MyProfilePage = (props) => {
+  const userloggedInfo = useSelector((state) => state.login.userInfo);
   const { borrowedItems } = useLoaderData();
+  console.log(userloggedInfo)
+
+  const nomeCompleto = userloggedInfo.nome + " " + userloggedInfo.sobrenome;
 
   return (
     <Page title="Meu Perfil">
       <UserProfileInfo
-        nomeCompleto="Affonso Faca"
-        username="affonso"
-        cargo="Chefe de Laboratório"
+        nomeCompleto={nomeCompleto}
+        username={userloggedInfo.username}
+        cargo={userloggedInfo.cargo}
       />
       <h3 className={classes["borrowed-title"]}>Meus Emprestimos:</h3>;
       <Suspense fallback={<p style={{ textAlign: "center" }}>Loading...</p>}>
@@ -82,7 +87,6 @@ async function loadBorrowedItems() {
   console.log('Iniciando busca')
   new Promise((resolve) => setTimeout(resolve, 10000))
   console.log('Encontrados')
-  return []
   return DUMMY_RESULTS;
 }
 

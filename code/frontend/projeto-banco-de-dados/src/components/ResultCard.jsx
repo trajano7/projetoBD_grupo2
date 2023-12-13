@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import classes from "./ResultCard.module.css";
 import Button from "./UI/Button";
 import Card from "./UI/Card";
-import { deleteItem } from "../store/searchResult-actions";
+import { deleteItem, reserveItem } from "../store/searchResult-actions";
 
 function formatarData(data) {
   const dia = data.getDate().toString().padStart(2, "0");
@@ -18,10 +18,13 @@ const ResultCard = (props) => {
   const materialDisponivel = props.status === "disponivel";
   const data = new Date(props.data_aquisicao);
 
-  let isAdmin = false;
+  let canDelete = false;
   if (loginInfo.isLoggedIn) {
-    if (loginInfo.userInfo.cargo === "Admin") {
-      isAdmin = true;
+    if (
+      loginInfo.userInfo.cargo === "Administrador" ||
+      loginInfo.userInfo.cargo === "Chefe de Laboratório"
+    ) {
+      canDelete = true;
     }
   }
 
@@ -42,7 +45,6 @@ const ResultCard = (props) => {
     );
   }
 
-
   const deleteItemHandler = () => {
     const proceed = window.confirm(
       `Você tem certeza que deseja deletar esse item?`
@@ -51,10 +53,17 @@ const ResultCard = (props) => {
     if (proceed) {
       if (props.categoria === "Livro") {
         dispatch(deleteItem(props.isbn));
-      }
-      else {
+      } else {
         dispatch(deleteItem(props.ndeserie));
       }
+    }
+  };
+
+  const reserveItemHandler = () => {
+    if (props.categoria === "Livro") {
+      dispatch(reserveItem(props.isbn));
+    } else {
+      dispatch(reserveItem(props.ndeserie));
     }
   };
 
@@ -90,7 +99,7 @@ const ResultCard = (props) => {
         </div>
       </div>
       <div className={classes.actions}>
-        {isAdmin && (
+        {canDelete && (
           <Button
             onClick={deleteItemHandler}
             disabled={!materialDisponivel}
@@ -99,7 +108,9 @@ const ResultCard = (props) => {
             Deletar
           </Button>
         )}
-        <Button disabled={!materialDisponivel}>Reservar</Button>
+        <Button onClick={reserveItemHandler} disabled={!materialDisponivel}>
+          Reservar
+        </Button>
       </div>
       {!materialDisponivel && (
         <p style={{ fontSize: 0.8 + "rem" }}>

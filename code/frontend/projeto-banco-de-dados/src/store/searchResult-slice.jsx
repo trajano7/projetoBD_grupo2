@@ -11,7 +11,7 @@ const searchResultSlice = createSlice({
   },
   reducers: {
     setSearchStatus(state, action) {
-      console.log('ola')
+      console.log("ola");
       state.searchStatus = action.payload;
     },
     setResultsList(state, action) {
@@ -26,6 +26,16 @@ const searchResultSlice = createSlice({
         if (action.payload !== id) {
           return item;
         }
+      });
+    },
+    reserveItem(state, action) {
+      state.searchStatus = { status: "completed", message: "none" };
+      state.resultsList = state.resultsList.map((item) => {
+        const id = item.isbn ? item.isbn : item.ndeserie;
+        if (id === action.payload) {
+          return { ...item, status: "indisponivel" };
+        }
+        return item;
       });
     },
   },

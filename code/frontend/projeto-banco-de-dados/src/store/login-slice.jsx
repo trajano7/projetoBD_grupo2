@@ -3,17 +3,25 @@ import { createSlice } from "@reduxjs/toolkit";
 const loginSlice = createSlice({
   name: "login",
   initialState: {
-    isLoggedIn: false,
+    isLoggedIn: true,
     // userInfo: { name: "Affonso", cargo: "Administrador" },
     // userInfo: { name: "Affonso", cargo: "Chefe de Laboratório" },
+    // userInfo: {
+    //   id: "",
+    //   nome: "",
+    //   sobrenome: "",
+    //   username: "",
+    //   cargo: "",
+    //   uri: "",
+    // },
     userInfo: {
-      id: "",
-      nome: "",
-      sobrenome: "",
-      username: "",
-      cargo: "",
-      uri: "",
-    },
+      id: "1",
+      nome: "João",
+      sobrenome: "Silva",
+      username: "joao.silva",
+      cargo: "Chefe de Laboratório",
+      uri: "https://exemplo.com/perfil1",
+    }
   },
   reducers: {
     login(state, action) {
