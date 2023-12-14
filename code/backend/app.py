@@ -1,15 +1,17 @@
 #De preferência criar uma venv antes de realizar o comando a seguir:
 
-#pip install Flask mysql-connector-python Flask-Bcrypt
+#pip install Flask mysql-connector-python Flask-Bcrypt flask-cors
 #ou
-#pip3 install Flask mysql-connector-python Flask-Bcrypt
+#pip3 install Flask mysql-connector-python Flask-Bcrypt flask-cors
 
 
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import mysql.connector
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
+CORS(app)
 bcrypt = Bcrypt(app)
 
 #Necessario banco mysql já com o banco a ser utilizado criado e rodando. Colocar os dados de acesso do mesmo abaixo antes de inicializar:
