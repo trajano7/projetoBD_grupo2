@@ -17,103 +17,64 @@ bcrypt = Bcrypt(app)
 # Configurações do banco de dados
 db_config = {
     'host': 'localhost',
-    'user': 'usuario',
-    'password': 'senha',
+    'user': 'root',
+    'password': 'root',
     'database': 'Laboratorio',
+    'ssl_disabled': True,
 }
 
 # Função para conectar ao banco de dados
 def get_db_connection():
     return mysql.connector.connect(**db_config)
 
-# Criação de tabela para Usuários
-def create_usuarios_table():
-    connection = get_db_connection()
-    cursor = connection.cursor()
+def obter_usuario_por_login(username):
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+        query = "SELECT * FROM Usuarios WHERE Login = %s"
+        cursor.execute(query, (username,))
+        usuario = cursor.fetchone()
+        return usuario
 
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Usuarios (
-            ID BIGINT PRIMARY KEY,
-            Nome VARCHAR(50),
-            Sobrenome VARCHAR(50),
-            Funcao VARCHAR(60),
-            Login VARCHAR(60),
-            Senha VARCHAR(255),
-            URIFotoUsuario VARCHAR(255)
-        )
-    """)
+    except Error as e:
+        print(f"Erro ao obter usuário por login: {e}")
 
-    connection.commit()
-    connection.close()
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
 
-# Configuração da tabela de Livros
-def create_livros_table():
-    connection = get_db_connection()
-    cursor = connection.cursor()
+    return None
 
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Livros (
-            ISBN VARCHAR(13) PRIMARY KEY,
-            Titulo VARCHAR(255),
-            Autor VARCHAR(255),
-            Descricao TEXT,
-            Categoria VARCHAR(50),
-            DataAquisicao DATE,
-            EstadoConservacao VARCHAR(20),
-            LocalizacaoFisica VARCHAR(100),
-            URICapaLivro VARCHAR(255)
-        )
-    """)
+def verificar_senha(password, senha_hash):
+    try:
+        # Use a função check_password_hash da biblioteca Flask-Bcrypt
+        return bcrypt.check_password_hash(senha_hash, password)
 
-    connection.commit()
-    connection.close()
+    except Exception as e:
+        print(f"Erro ao verificar senha: {e}")
 
-# Restante do código para operações com Livros
+    return False
 
-# Configuração da tabela de Materiais Didáticos
-def create_materiais_didaticos_table():
-    connection = get_db_connection()
-    cursor = connection.cursor()
+@app.route('/login', methods=['POST'])
+def login():
+    dados_formulario = request.json
+    username = dados_formulario['username']
+    password = dados_formulario['password']
 
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS MateriaisDidaticos (
-            ID INT PRIMARY KEY,
-            Descricao TEXT,
-            Categoria VARCHAR(50),
-            NumeroSerie VARCHAR(20),
-            DataAquisicao DATE,
-            EstadoConservacao VARCHAR(20),
-            LocalizacaoFisica VARCHAR(100),
-            URIFotoMaterial VARCHAR(255)
-        )
-    """)
+    # Verificar se o usuário existe
+    usuario = obter_usuario_por_login(username)
+    if not usuario:
+        return jsonify({"message": "Usuário não encontrado"}), 401
 
-    connection.commit()
-    connection.close()
+    # Verificar a senha
+    if not verificar_senha(password, usuario['Senha']):
+        return jsonify({"message": "Credenciais inválidas"}), 401
 
-# Configuração da tabela de Empréstimos
-def create_emprestimos_table():
-    connection = get_db_connection()
-    cursor = connection.cursor()
+    # Autenticação bem-sucedida
+    # Aqui é possível gerar um token JWT ou criar uma sessão de usuário, dependendo da abordagem de autenticação.
 
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Emprestimos (
-            ID INT PRIMARY KEY,
-            IDUsuario BIGINT,
-            IDItem INT,
-            DataEmprestimo DATE,
-            DataDevolucaoPrevista DATE,
-            Status VARCHAR(20),
-            FOREIGN KEY (IDUsuario) REFERENCES Usuarios(ID),
-            FOREIGN KEY (IDItem) REFERENCES MateriaisDidaticos(ID)
-        )
-    """)
-
-    connection.commit()
-    connection.close()
-
-################# ROTAS E FUNCIONALIDAES 
-
+    return jsonify({"message": "Login bem-sucedido"}), 200
 ######### CRUD USUARIOS
 
 # Rota para criar um usuário
@@ -139,10 +100,9 @@ def criar_usuario(dados_usuario):
     senha_hash = bcrypt.generate_password_hash(dados_usuario['Senha']).decode('utf-8')
 
     cursor.execute("""
-        INSERT INTO Usuarios (ID, Nome, Sobrenome, Funcao, Login, Senha, URIFotoUsuario)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO Usuarios (Nome, Sobrenome, Funcao, Login, Senha, URIFotoUsuario)
+        VALUES (%s, %s, %s, %s, %s, %s)
     """, (
-        dados_usuario['ID'],
         dados_usuario['Nome'],
         dados_usuario['Sobrenome'],
         dados_usuario['Funcao'],
@@ -433,12 +393,7 @@ def deletar_livro_por_isbn(isbn):
 @app.route('/materiaisdidaticos', methods=['POST'])
 def criar_material_didatico_rota():
     dados_material_didatico = request.json
-
-    # Verificar se o material didático já existe pelo ID
-    material_didatico_existente = obter_material_didatico_por_id(dados_material_didatico['ID'])
-    if material_didatico_existente:
-        return jsonify({"message": "Material didático já cadastrado"}), 400
-
+    
     # Criar o material didático
     criar_material_didatico(dados_material_didatico)
 
@@ -450,10 +405,9 @@ def criar_material_didatico(dados_material_didatico):
     cursor = connection.cursor()
 
     cursor.execute("""
-        INSERT INTO MateriaisDidaticos (ID, Descricao, Categoria, NumeroSerie, DataAquisicao, EstadoConservacao, LocalizacaoFisica, URIFotoMaterial)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO MateriaisDidaticos (Descricao, Categoria, NumeroSerie, DataAquisicao, EstadoConservacao, LocalizacaoFisica, URIFotoMaterial)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
     """, (
-        dados_material_didatico['ID'],
         dados_material_didatico['Descricao'],
         dados_material_didatico['Categoria'],
         dados_material_didatico['NumeroSerie'],
@@ -603,36 +557,74 @@ def deletar_material_didatico_por_id(material_id):
 @app.route('/emprestimos', methods=['POST'])
 def criar_emprestimo_rota():
     dados_emprestimo = request.json
-
-    # Verificar se o empréstimo já existe pelo ID 
-    emprestimo_existente = obter_emprestimo_por_id(dados_emprestimo['ID'])
-    if emprestimo_existente:
-        return jsonify({"message": "Empréstimo já cadastrado"}), 400
-
+    
     # Criar o empréstimo
-    criar_emprestimo(dados_emprestimo)
-
-    return jsonify({"message": "Empréstimo cadastrado com sucesso!"})
+    return criar_emprestimo(dados_emprestimo)
 
 # Função para criar um empréstimo
 def criar_emprestimo(dados_emprestimo):
     connection = get_db_connection()
     cursor = connection.cursor()
 
-    cursor.execute("""
-        INSERT INTO Emprestimos (ID, IDUsuario, IDItem, DataEmprestimo, DataDevolucaoPrevista, Status)
-        VALUES (%s, %s, %s, %s, %s, %s)
-    """, (
-        dados_emprestimo['ID'],
-        dados_emprestimo['IDUsuario'],
-        dados_emprestimo['IDItem'],
-        dados_emprestimo['DataEmprestimo'],
-        dados_emprestimo['DataDevolucaoPrevista'],
-        dados_emprestimo['Status']
-    ))
+    tipo_emprestimo = dados_emprestimo['TipoEmprestimo']
+      
+    # Verificar se já existe um empréstimo
+    emprestimo_existente = verificar_emprestimo_existente(
+        tipo_emprestimo,
+        dados_emprestimo.get('ISBNLivro'),  # Utilize get() para lidar com valores opcionais
+        dados_emprestimo.get('IDMaterialDidatico')  # Utilize get() para lidar com valores opcionais
+    )
+
+    if emprestimo_existente:
+        return jsonify({"message": "Já existe um empréstimo ativo para este item."}), 400
+
+    if tipo_emprestimo == 'Livro':
+        cursor.execute("""
+            INSERT INTO Emprestimos (IDUsuario, TipoEmprestimo, ISBNLivro, DataEmprestimo, DataDevolucaoPrevista, Status)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (
+            dados_emprestimo['IDUsuario'],
+            tipo_emprestimo,
+            dados_emprestimo['ISBNLivro'],
+            dados_emprestimo['DataEmprestimo'],
+            dados_emprestimo['DataDevolucaoPrevista'],
+            'Emprestado'
+        ))
+    elif tipo_emprestimo == 'MaterialDidatico':
+        cursor.execute("""
+            INSERT INTO Emprestimos (IDUsuario, TipoEmprestimo, IDMaterialDidatico, DataEmprestimo, DataDevolucaoPrevista, Status)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (
+            dados_emprestimo['IDUsuario'],
+            tipo_emprestimo,
+            dados_emprestimo['IDMaterialDidatico'],
+            dados_emprestimo['DataEmprestimo'],
+            dados_emprestimo['DataDevolucaoPrevista'],
+            'Emprestado'
+        ))
 
     connection.commit()
     connection.close()
+
+    return jsonify({"message": "Empréstimo cadastrado com sucesso!"})
+    
+def verificar_emprestimo_existente(tipo_emprestimo, isbn_livro=None, id_material_didatico=None):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT * FROM Emprestimos
+        WHERE TipoEmprestimo = %s
+        AND ((ISBNLivro = %s AND IDMaterialDidatico IS NULL)
+             OR (IDMaterialDidatico = %s AND ISBNLivro IS NULL))
+        AND Status = 'Emprestado'
+    """, (tipo_emprestimo, isbn_livro, id_material_didatico))
+
+    emprestimo_existente = cursor.fetchone()
+
+    connection.close()
+
+    return emprestimo_existente
 
 # Rota para obter todos os empréstimos
 @app.route('/emprestimos', methods=['GET'])
@@ -655,10 +647,12 @@ def obter_todos_os_emprestimos_db():
         emprestimo_dict = {
             'ID': emprestimo[0],
             'IDUsuario': emprestimo[1],
-            'IDItem': emprestimo[2],
-            'DataEmprestimo': emprestimo[3].strftime('%Y-%m-%d'),
-            'DataDevolucaoPrevista': emprestimo[4].strftime('%Y-%m-%d'),
-            'Status': emprestimo[5]
+            'TipoEmprestimo': emprestimo[2],
+            'ISBNLivro': emprestimo[3],
+            'IDMaterialDidatico': emprestimo[4],
+            'DataEmprestimo': emprestimo[5].strftime('%Y-%m-%d'),
+            'DataDevolucaoPrevista': emprestimo[6].strftime('%Y-%m-%d'),
+            'Status': emprestimo[7]
         }
         lista_emprestimos.append(emprestimo_dict)
 
@@ -687,10 +681,12 @@ def obter_emprestimo_por_id(emprestimo_id):
         emprestimo_dict = {
             'ID': emprestimo[0],
             'IDUsuario': emprestimo[1],
-            'IDItem': emprestimo[2],
-            'DataEmprestimo': emprestimo[3].strftime('%Y-%m-%d'),
-            'DataDevolucaoPrevista': emprestimo[4].strftime('%Y-%m-%d'),
-            'Status': emprestimo[5]
+            'TipoEmprestimo': emprestimo[2],
+            'ISBNLivro': emprestimo[3],
+            'IDMaterialDidatico': emprestimo[4],
+            'DataEmprestimo': emprestimo[5].strftime('%Y-%m-%d'),
+            'DataDevolucaoPrevista': emprestimo[6].strftime('%Y-%m-%d'),
+            'Status': emprestimo[7]
         }
         return emprestimo_dict
     else:
@@ -772,16 +768,4 @@ def table_exists(table_name):
     return result is not None
 
 if __name__ == '__main__':
-    if not table_exists('Usuarios'):
-        create_usuarios_table()
-    
-    if not table_exists('Livros'):
-        create_livros_table()
-    
-    if not table_exists('MateriaisDidaticos'):
-        create_materiais_didaticos_table()
-    
-    if not table_exists('Emprestimos'):
-        create_emprestimos_table()
-    
     app.run(debug=True)
