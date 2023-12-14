@@ -66,7 +66,6 @@ const UserCard = (props) => {
             >
               Deletar
             </Button>
-            <Button onClick={editUserHandler}>Editar</Button>
           </>
         )}
       </div>
