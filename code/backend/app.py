@@ -707,7 +707,14 @@ def obter_emprestimos_por_id_usuario(id_usuario):
     connection = get_db_connection()
     cursor = connection.cursor()
 
-    cursor.execute("SELECT * FROM Emprestimos WHERE IDUsuario = %s", (id_usuario,))
+    cursor.execute("""
+        SELECT E.*, L.Titulo as titulo, L.Autor as autor,
+               MD.NumeroSerie as num_serie
+        FROM Emprestimos E
+        LEFT JOIN Livros L ON E.ISBNLivro = L.ISBN
+        LEFT JOIN MateriaisDidaticos MD ON E.IDMaterialDidatico = MD.ID
+        WHERE E.IDUsuario = %s
+    """, (id_usuario,))
     emprestimos_usuario = cursor.fetchall()
 
     connection.close()
@@ -718,8 +725,15 @@ def obter_emprestimos_por_id_usuario(id_usuario):
             'ID': emprestimo[0],
             'IDUsuario': emprestimo[1],
             'TipoEmprestimo': emprestimo[2],
-            'ISBNLivro': emprestimo[3],
-            'IDMaterialDidatico': emprestimo[4],
+            'Livro': {
+                'ISBN': emprestimo[3],
+                'Titulo': emprestimo[8],  # Índice 8 é o 'titulo'
+                'Autor': emprestimo[9],   # Índice 9 é o 'autor'
+            } if emprestimo[2] == 'Livro' else None,
+            'MaterialDidatico': {
+                'ID': emprestimo[4],
+                'NumeroSerie': emprestimo[10],  # Índice 10 é o 'num_serie'
+            } if emprestimo[2] == 'MaterialDidatico' else None,
             'DataEmprestimo': emprestimo[5].strftime('%Y-%m-%d'),
             'DataDevolucaoPrevista': emprestimo[6].strftime('%Y-%m-%d'),
             'Status': emprestimo[7]
