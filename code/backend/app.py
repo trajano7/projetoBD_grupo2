@@ -9,6 +9,7 @@ from flask import Flask, request, jsonify
 import mysql.connector
 from flask_bcrypt import Bcrypt
 
+app = Flask(__name__)
 # Configuração de cabeçalhos CORS manualmente
 @app.after_request
 def after_request(response):
@@ -23,7 +24,7 @@ def after_request(response):
 db_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': '123',
+    'password': 'root',
     'database': 'Laboratorio',
     'ssl_disabled': True,
 }
