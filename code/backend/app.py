@@ -207,23 +207,31 @@ def atualizar_usuario_por_id(usuario_id, novos_dados):
 
 # Rota para deletar um usuário pelo ID
 @app.route('/usuarios/<int:usuario_id>', methods=['DELETE'])
-def deletar_usuario(usuario_id):
+def deletar_usuario_por_id(usuario_id):
     # Verificar se o usuário existe
     usuario_existente = obter_usuario_por_id(usuario_id)
     if not usuario_existente:
         return jsonify({"message": "Usuário não encontrado"}), 404
 
+    # Deletar empréstimos associados ao usuário
+    deletar_emprestimos_por_usuario_id(usuario_id)
+
     # Deletar o usuário
-    deletar_usuario_por_id(usuario_id)
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM Usuarios WHERE ID = %s", (usuario_id,))
+    connection.commit()
+    connection.close()
 
-    return jsonify({"message": "Usuário deletado com sucesso!"})
+    # Retornar uma resposta de sucesso
+    return jsonify({"message": "Usuário deletado com sucesso"}), 200
 
-# Função para deletar um usuário pelo ID
-def deletar_usuario_por_id(usuario_id):
+    
+def deletar_emprestimos_por_usuario_id(usuario_id):
     connection = get_db_connection()
     cursor = connection.cursor()
 
-    cursor.execute("DELETE FROM Usuarios WHERE ID = %s", (usuario_id,))
+    cursor.execute("DELETE FROM Emprestimos WHERE IDUsuario = %s", (usuario_id,))
     connection.commit()
 
     connection.close()
@@ -427,24 +435,32 @@ def atualizar_livro_por_isbn(isbn, novos_dados):
     connection.close()
 
 # Rota para deletar um livro pelo ISBN
-@app.route('/livros/<string:isbn>', methods=['DELETE'])
+@app.route('/livros/<isbn>', methods=['DELETE'])
 def deletar_livro(isbn):
     # Verificar se o livro existe
     livro_existente = obter_livro_por_isbn(isbn)
     if not livro_existente:
         return jsonify({"message": "Livro não encontrado"}), 404
 
+    # Deletar empréstimos associados ao livro
+    deletar_emprestimos_por_isbn_livro(isbn)
+
     # Deletar o livro
-    deletar_livro_por_isbn(isbn)
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM Livros WHERE ISBN = %s", (isbn,))
+    connection.commit()
+    connection.close()
 
-    return jsonify({"message": "Livro deletado com sucesso!"})
+    # Retornar uma resposta de sucesso
+    return jsonify({"message": "Livro deletado com sucesso"}), 200
 
-# Função para deletar um livro pelo ISBN
-def deletar_livro_por_isbn(isbn):
+
+def deletar_emprestimos_por_isbn_livro(isbn):
     connection = get_db_connection()
     cursor = connection.cursor()
 
-    cursor.execute("DELETE FROM Livros WHERE ISBN = %s", (isbn,))
+    cursor.execute("DELETE FROM Emprestimos WHERE ISBNLivro = %s", (isbn,))
     connection.commit()
 
     connection.close()
@@ -631,21 +647,29 @@ def atualizar_material_didatico_por_id(material_id, novos_dados):
 @app.route('/materiaisdidaticos/<int:material_id>', methods=['DELETE'])
 def deletar_material_didatico(material_id):
     # Verificar se o material didático existe
-    material_didatico_existente = obter_material_didatico_por_id(material_id)
-    if not material_didatico_existente:
+    material_existente = obter_material_didatico_por_id(material_id)
+    if not material_existente:
         return jsonify({"message": "Material didático não encontrado"}), 404
 
+    # Deletar empréstimos associados ao material didático
+    deletar_emprestimos_por_id_material_didatico(material_id)
+
     # Deletar o material didático
-    deletar_material_didatico_por_id(material_id)
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM MateriaisDidaticos WHERE ID = %s", (material_id,))
+    connection.commit()
+    connection.close()
 
-    return jsonify({"message": "Material didático deletado com sucesso!"})
+    # Retornar uma resposta de sucesso
+    return jsonify({"message": "Material didático deletado com sucesso"}), 200
 
-# Função para deletar um material didático pelo ID
-def deletar_material_didatico_por_id(material_id):
+    
+def deletar_emprestimos_por_id_material_didatico(material_id):
     connection = get_db_connection()
     cursor = connection.cursor()
 
-    cursor.execute("DELETE FROM MateriaisDidaticos WHERE ID = %s", (material_id,))
+    cursor.execute("DELETE FROM Emprestimos WHERE IDMaterialDidatico = %s", (material_id,))
     connection.commit()
 
     connection.close()
