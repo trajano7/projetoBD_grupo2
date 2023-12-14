@@ -164,7 +164,7 @@ INSERT INTO Emprestimos (IDUsuario, TipoEmprestimo, ISBNLivro, IDMaterialDidatic
     NULL,
     '2023-11-10',
     '2023-12-10',
-    'Emprestado'
+    'Devolvido'
 );
 
 INSERT INTO Emprestimos (IDUsuario, TipoEmprestimo, ISBNLivro, IDMaterialDidatico, DataEmprestimo, DataDevolucaoPrevista, Status) VALUES (
@@ -174,5 +174,27 @@ INSERT INTO Emprestimos (IDUsuario, TipoEmprestimo, ISBNLivro, IDMaterialDidatic
     1, -- Suponhamos que o ID do material didático desejado é 1 (ajuste conforme necessário)
     '2022-09-15',
     '2022-10-15',
+    'Devolvido'
+);
+
+-- Novo empréstimo para o usuário 1, Livro
+INSERT INTO Emprestimos (IDUsuario, TipoEmprestimo, ISBNLivro, IDMaterialDidatico, DataEmprestimo, DataDevolucaoPrevista, Status) VALUES (
+    1,
+    'Livro',
+    '9788522118274', -- ISBN fictício, ajuste conforme necessário
+    NULL,
+    '2023-01-01',
+    '2023-02-01',
+    'Emprestado'
+);
+
+-- Novo empréstimo para o usuário 1, Material Didático
+INSERT INTO Emprestimos (IDUsuario, TipoEmprestimo, ISBNLivro, IDMaterialDidatico, DataEmprestimo, DataDevolucaoPrevista, Status) VALUES (
+    1,
+    'MaterialDidatico',
+    NULL,
+    2, -- Suponhamos que o ID do material didático desejado é 2 (ajuste conforme necessário)
+    '2023-03-01',
+    '2023-04-01',
     'Emprestado'
 );
