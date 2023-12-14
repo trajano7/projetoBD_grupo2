@@ -1,4 +1,5 @@
 import { searchResultActions } from "./searchResult-slice";
+import { uiActions } from "./ui-slice";
 
 const DUMMY_RESULTS = [
   {
@@ -91,6 +92,25 @@ let x = 0;
 
 export const fetchSearchedData = (searchInfo) => {
   return async (dispatch) => {
+    const fetchData = async () => {
+      const response = await fetch("http://127.0.0.1:5000/livros");
+      if (!response.ok) {
+        throw new Error("Could not login!");
+      }
+    };
+
+    try {
+      const searchResponse = await fetchData();
+      dispatch(searchResultActions.setResultsList(searchResponse));
+    } catch (error) {
+      dispatch(
+        uiActions.showNotifications({
+          status: "error",
+          title: "Error!",
+          message: error,
+        })
+      );
+    }
     //Faz o fetch do post, verifca erros, etc...
     //Try catch
     console.log(searchInfo);
@@ -103,7 +123,7 @@ export const fetchSearchedData = (searchInfo) => {
     //   x = 1;
     //   return;
     // }
-    dispatch(searchResultActions.setResultsList(DUMMY_RESULTS2));
+    // dispatch(searchResultActions.setResultsList(DUMMY_RESULTS2));
   };
 };
 
