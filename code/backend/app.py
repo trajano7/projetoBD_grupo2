@@ -691,6 +691,42 @@ def obter_emprestimo_por_id(emprestimo_id):
         return emprestimo_dict
     else:
         return None
+    
+# Rota para obter todos os empréstimos de um usuário pelo ID do usuário
+@app.route('/emprestimos/usuario/<int:id_usuario>', methods=['GET'])
+def obter_emprestimos_por_usuario(id_usuario):
+    emprestimos_usuario = obter_emprestimos_por_id_usuario(id_usuario)
+
+    if emprestimos_usuario:
+        return jsonify(emprestimos_usuario)
+    else:
+        return jsonify({"message": f"Empréstimos não encontrados para o usuário com ID {id_usuario}"}), 404
+
+# Função para obter todos os empréstimos de um usuário pelo ID do usuário
+def obter_emprestimos_por_id_usuario(id_usuario):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT * FROM Emprestimos WHERE IDUsuario = %s", (id_usuario,))
+    emprestimos_usuario = cursor.fetchall()
+
+    connection.close()
+
+    lista_emprestimos_usuario = []
+    for emprestimo in emprestimos_usuario:
+        emprestimo_dict = {
+            'ID': emprestimo[0],
+            'IDUsuario': emprestimo[1],
+            'TipoEmprestimo': emprestimo[2],
+            'ISBNLivro': emprestimo[3],
+            'IDMaterialDidatico': emprestimo[4],
+            'DataEmprestimo': emprestimo[5].strftime('%Y-%m-%d'),
+            'DataDevolucaoPrevista': emprestimo[6].strftime('%Y-%m-%d'),
+            'Status': emprestimo[7]
+        }
+        lista_emprestimos_usuario.append(emprestimo_dict)
+
+    return lista_emprestimos_usuario
 
 # Rota para atualizar um empréstimo pelo ID
 @app.route('/emprestimos/<int:emprestimo_id>', methods=['PUT'])
