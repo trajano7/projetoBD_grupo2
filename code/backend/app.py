@@ -14,6 +14,7 @@ bcrypt = Bcrypt(app)
 # Configuração de cabeçalhos CORS manualmente
 @app.after_request
 def after_request(response):
+    print('teste')
     response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
@@ -486,7 +487,7 @@ def deletar_livro(isbn):
     connection.close()
 
     # Retornar uma resposta de sucesso
-    return jsonify({"message": "Livro deletado com sucesso"}), 200
+    return jsonify({"message": "Livro deletado com sucesso", "deletedItem": isbn }), 200
 
 
 def deletar_emprestimos_por_isbn_livro(isbn):
@@ -695,7 +696,7 @@ def deletar_material_didatico(material_id):
     connection.close()
 
     # Retornar uma resposta de sucesso
-    return jsonify({"message": "Material didático deletado com sucesso"}), 200
+    return jsonify({"message": "Material didático deletado com sucesso", "deletedItem": material_id}), 200
 
     
 def deletar_emprestimos_por_id_material_didatico(material_id):
@@ -734,7 +735,7 @@ def criar_emprestimo(dados_emprestimo):
     )
 
     if emprestimo_existente:
-        return jsonify({"message": "Já existe um empréstimo ativo para este item."}), 400
+        return jsonify({"message": "Ja existe um emprestimo ativo para este item."}), 400
 
     if tipo_emprestimo == 'Livro':
         cursor.execute("""

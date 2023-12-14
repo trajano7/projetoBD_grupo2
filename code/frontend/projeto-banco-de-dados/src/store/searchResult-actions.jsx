@@ -142,7 +142,7 @@ export const fetchSearchedData = (searchInfo) => {
               localizacao: result.LocalizacaoFisica,
               uri: result.URICapaLivro,
               descricao: result.Descricao,
-              categora: result.Categoria,
+              categoria: result.Categoria,
             }))
           )
         );
@@ -157,7 +157,7 @@ export const fetchSearchedData = (searchInfo) => {
               localizacao: result.LocalizacaoFisica,
               uri: result.URIFotoMaterial,
               descricao: result.Descricao,
-              categora: result.Categoria,
+              categoria: result.Categoria,
             }))
           )
         );
@@ -197,6 +197,7 @@ export const deleteItem = (itemID) => {
 
 export const reserveItem = (itemInfo) => {
   return async (dispatch) => {
+    console.log(itemInfo)
     const fetchData = async () => {
       const response = await fetch(`http://127.0.0.1:5000/emprestimos`, {
         method: "POST",

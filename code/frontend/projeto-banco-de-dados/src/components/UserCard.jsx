@@ -11,7 +11,7 @@ const UserCard = (props) => {
 
   let isAdmin = false;
   if (loginInfo.isLoggedIn) {
-    if (loginInfo.userInfo.cargo === "Admin") {
+    if (loginInfo.userInfo.cargo === "Administrador") {
       isAdmin = true;
     }
   }
@@ -27,6 +27,7 @@ const UserCard = (props) => {
   };
 
   const editUserHandler = () => {
+    console.log(props.id)
     navigate(`/gerenciarUsuarios/${props.id}`)
   };
 

@@ -21,7 +21,7 @@ const searchResultSlice = createSlice({
     deleteItem(state, action) {
       state.searchStatus = { status: "completed", message: "none" };
       state.resultsList = state.resultsList.filter((item) => {
-        const id = item.isbn ? item.isbn : item.ndeserie;
+        const id = item.isbn ? item.isbn : item.ID;
         console.log(id, action.payload);
         if (action.payload !== id) {
           return item;

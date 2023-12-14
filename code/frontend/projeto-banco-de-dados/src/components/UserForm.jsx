@@ -66,7 +66,10 @@ const UserForm = (props) => {
     valueChangeHandler: passwordChangedHandler,
     valueBlurHandler: passwordBlurHandler,
     resetInput: resetPassword,
-  } = useInput((value) => value.trim().length >= 5);
+  } = useInput(
+    (value) => value.trim().length >= 5,
+    props.password ? props.user.password : ""
+  );
 
   const {
     value: enteredURI,
@@ -119,12 +122,16 @@ const UserForm = (props) => {
       role: enteredRole,
     };
 
-    if (!valuesIsValid) {
+    if (!valuesIsValid && !props.user) {
       window.alert("Há um ou mais dados inválidos.");
       return;
     }
 
-    fetcher.submit(userData, { method: "POST" });
+    if (!props.user) {
+      fetcher.submit(userData, { method: "POST" });
+    } else {
+      fetcher.submit(userData, { method: "PATCH" });
+    }
   };
 
   return (
@@ -180,22 +187,24 @@ const UserForm = (props) => {
             {usernameHasError && <p>*Nome de usuário obrigatório.</p>}
           </div>
         </div>
-        <div className={classes["control"]}>
-          <Input
-            selector={false}
-            newClasses={classes.input}
-            id="senha"
-            type="password"
-            name="senha"
-            label="Senha"
-            value={enteredPassword}
-            onChange={passwordChangedHandler}
-            onBlur={passwordBlurHandler}
-          />
-          <div className={classes["control-error"]}>
-            {passwordHasError && <p>*A senha conter mais de 5 chars.</p>}
+        {!props.user && (
+          <div className={classes["control"]}>
+            <Input
+              selector={false}
+              newClasses={classes.input}
+              id="senha"
+              type="password"
+              name="senha"
+              label="Senha"
+              value={enteredPassword}
+              onChange={passwordChangedHandler}
+              onBlur={passwordBlurHandler}
+            />
+            <div className={classes["control-error"]}>
+              {passwordHasError && <p>*A senha conter mais de 5 chars.</p>}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <div className={classes["control"]}>
         <Input
@@ -263,7 +272,7 @@ const UserForm = (props) => {
         >
           Cancelar
         </Button>
-        <Button disabled={!valuesIsValid}>Cadastrar</Button>
+        <Button disabled={!valuesIsValid && !props.user}>Cadastrar</Button>
       </div>
     </form>
   );

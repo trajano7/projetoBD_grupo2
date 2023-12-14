@@ -4,7 +4,7 @@ import ErrorPage from "./pages/Error";
 import HomePage from "./pages/Home";
 import RootLayout from "./pages/Root";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { action as searchAction } from "./components/SearchForm";
+import { action as searchAction } from "./components/ResultCard";
 import NewUserPage from "./pages/NewUser";
 import { action as newUserAction } from "./components/UserForm";
 import NewBookPage from "./pages/NewBook";

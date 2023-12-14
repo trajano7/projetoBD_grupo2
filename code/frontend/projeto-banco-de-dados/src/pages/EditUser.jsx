@@ -9,17 +9,21 @@ const EditUserPage = (props) => {
   const resultsList = useSelector((state) => state.users.usersList);
   const params = useParams();
 
-  const user = resultsList.find((user) => user.id === params.userID);
+  const user = resultsList.find((user) => { if (user.id === params.userID) { console.log(user) }; return user.id === params.userID});
+  console.log(resultsList)
+  console.log(user);
 
-  useEffect(() => {
-    if (!user) {
-      navigate("..");
-    }
-  }, []);
+
+
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate("..");
+  //   }
+  // }, []);
 
   return (
     <Page title="Cadastra Usuário">
-      <UserForm user={user} />;
+      <UserForm user={resultsList[0]} />;
     </Page>
   );
 };

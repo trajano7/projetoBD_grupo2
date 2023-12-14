@@ -36,15 +36,15 @@ const SearchUser = (props) => {
       return;
     }
 
-    const searchInfo = { categoria: enteredCategoria, search: enteredSearch };
+    const searchInfo = enteredSearch;
     dispatch(fetchUsers(searchInfo));
   };
 
   return (
     <form className={classes.form} onSubmit={submitSearchHandler}>
-      <h3>Buscar Usuários</h3>
+      <h3>Buscar Usuários por ID</h3>
       <div className={classes['control-row']}>
-        <Input
+        {/* <Input
             selector={true}
             selectorList={["Nome", "ID"]}
             newClasses={classes.select}
@@ -53,7 +53,7 @@ const SearchUser = (props) => {
             value={enteredCategoria}
             onChange={categoriaChangedHandler}
             onBlur={categoriaBlurHandler}
-        />
+        /> */}
         <Input
             selector={false}
             newClasses={classes.input}
