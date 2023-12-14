@@ -14,8 +14,48 @@ CREATE TABLE Livros (
     LocalizacaoFisica VARCHAR(100),
     URICapaLivro VARCHAR(255)
 );
+
+-- Criação da tabela MateriaisDidaticos
+CREATE TABLE MateriaisDidaticos (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Descricao TEXT,
+    Categoria VARCHAR(50),
+    NumeroSerie VARCHAR(20),
+    DataAquisicao DATE,
+    EstadoConservacao VARCHAR(20),
+    LocalizacaoFisica VARCHAR(100),
+    URIFotoMaterial VARCHAR(255)
+);
+
+-- Criação da tabela Usuários
+CREATE TABLE Usuarios (
+    ID BIGINT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(50),
+    Sobrenome VARCHAR(50),
+    Funcao VARCHAR(60),
+    Login VARCHAR(60),
+    Senha VARCHAR(255), -- A senha deve ser armazenada criptografada
+    URIFotoUsuario VARCHAR(255)
+);
+
+-- Criação da tabela Emprestimos
+-- Criação da tabela Emprestimos
+CREATE TABLE Emprestimos (
+  ID INT AUTO_INCREMENT PRIMARY KEY,
+  IDUsuario BIGINT NOT NULL,
+  TipoEmprestimo ENUM('Livro', 'MaterialDidatico') NOT NULL NOT NULL, -- Pode ser 'Livro' ou 'MaterialDidatico'
+  ISBNLivro VARCHAR(13),
+  IDMaterialDidatico INT,
+  DataEmprestimo DATE NOT NULL,
+  DataDevolucaoPrevista DATE,
+  Status ENUM('Emprestado', 'Devolvido') NOT NULL,
+  FOREIGN KEY (IDUsuario) REFERENCES Usuarios(ID),
+  FOREIGN KEY (ISBNLivro) REFERENCES Livros(ISBN),
+  FOREIGN KEY (IDMaterialDidatico) REFERENCES MateriaisDidaticos(ID)
+);
+
 -- Inserção de linhas na tabela Livros
-INSERT INTO Livros VALUES (
+INSERT INTO Livros (ISBN, Titulo, Autor, Descricao, Categoria, DataAquisicao, EstadoConservacao, LocalizacaoFisica, URICapaLivro) VALUES (
 	'9786587322117',
     "Iniciação no Laboratório de Química",
     "Daltamir Justino Maia",
@@ -27,7 +67,7 @@ INSERT INTO Livros VALUES (
     "Instituto de Química, Laboratório 3",
 	"Iniciação no Laboratório de Química Daltamir Justino Maia"
 );
-INSERT INTO Livros VALUES (
+INSERT INTO Livros (ISBN, Titulo, Autor, Descricao, Categoria, DataAquisicao, EstadoConservacao, LocalizacaoFisica, URICapaLivro) VALUES (
 	'9788522118274',
     "Química geral e reações químicas - Volume 1",
     "John C Kotz, Paul M Treichel, John R Townsend, David A Treichel",
@@ -38,7 +78,7 @@ INSERT INTO Livros VALUES (
     "Instituto de Química, Laboratório 3",
 	"Química geral e reações químicas Volume 1 John C Kotz Paul M Treichel John R Townsend David A Treichel"
 );
-INSERT INTO Livros VALUES (
+INSERT INTO Livros (ISBN, Titulo, Autor, Descricao, Categoria, DataAquisicao, EstadoConservacao, LocalizacaoFisica, URICapaLivro) VALUES (
 	'9788582604618',
     "Princípios de Química: Questionando a Vida Moderna e o Meio Ambiente - 7ª Edição",
     "Peter Atkins, Loretta Jones, Leroy Laverman",
@@ -50,22 +90,9 @@ INSERT INTO Livros VALUES (
 	"Princípios de Química: Questionando a Vida Moderna e o Meio Ambiente 7ª Edição Peter Atkins Loretta Jones Leroy Laverman"
 );
 
-
--- Criação da tabela Materiais Didáticos
-CREATE TABLE MateriaisDidaticos (
-    ID INT PRIMARY KEY,
-    Descricao TEXT,
-    Categoria VARCHAR(50),
-    NumeroSerie VARCHAR(20),
-    DataAquisicao DATE,
-    EstadoConservacao VARCHAR(20),
-    LocalizacaoFisica VARCHAR(100),
-    URIFotoMaterial VARCHAR(255)
-);
 -- Inserção de linhas na tabela MateriaisDidaticos
-INSERT INTO MateriaisDidaticos VALUES (
-	1,
-    'Tubo de ensaio',
+INSERT INTO MateriaisDidaticos (Descricao, Categoria, NumeroSerie, DataAquisicao, EstadoConservacao, LocalizacaoFisica, URIFotoMaterial) VALUES (
+	'Tubo de ensaio',
     'Vidraria de laboratório',
     'pvcBUzQotc7rk3R6Nigc',
     '2019-07-10',
@@ -73,9 +100,8 @@ INSERT INTO MateriaisDidaticos VALUES (
     'Instituto de Química, Laboratório 2',
     'Tubo de ensaio'
 );
-INSERT INTO MateriaisDidaticos VALUES (
-	2,
-    'Copo de Becker',
+INSERT INTO MateriaisDidaticos (Descricao, Categoria, NumeroSerie, DataAquisicao, EstadoConservacao, LocalizacaoFisica, URIFotoMaterial) VALUES (
+	'Copo de Becker',
     'Vidraria de laboratório',
     'QJsDQYk6Bgi6ghfjLCof',
     '2019-07-10',
@@ -83,9 +109,8 @@ INSERT INTO MateriaisDidaticos VALUES (
     'Instituto de Química, Laboratório 2',
     'Copo de Becker'
 );
-INSERT INTO MateriaisDidaticos VALUES (
-	3,
-    'Balão de fundo chato',
+INSERT INTO MateriaisDidaticos (Descricao, Categoria, NumeroSerie, DataAquisicao, EstadoConservacao, LocalizacaoFisica, URIFotoMaterial) VALUES (
+	'Balão de fundo chato',
     'Vidraria de laboratório',
     'ycgyPVhB4jtFvQZusPdF',
     '2019-07-10',
@@ -94,39 +119,25 @@ INSERT INTO MateriaisDidaticos VALUES (
     'Balão de fundo chato'
 );
 
-
--- Criação da tabela Usuários
-CREATE TABLE Usuarios (
-    ID BIGINT PRIMARY KEY,
-    Nome VARCHAR(50),
-    Sobrenome VARCHAR(50),
-    Funcao VARCHAR(60),
-    Login VARCHAR(60),
-    Senha VARCHAR(255), -- A senha deve ser armazenada criptografada
-    URIFotoUsuario VARCHAR(255)
-);
 -- Inserção de linhas na tabela Usuarios
-INSERT INTO Usuarios VALUES (
-	20200115678,
-    "Davi",
+INSERT INTO Usuarios (Nome, Sobrenome, Funcao, Login, Senha, URIFotoUsuario) VALUES (
+	"Davi",
     "Fernandes Gomes",
     "Estudante",
     "davi.gomes@aluno.unb.br",
     "baaf8cfd70bd7c49ecdc92f041bfb47409f90a41", -- Senha exemplo: "Salvador@Bahia246" criptografada com SHA1
     "Davi Fernandes Gomes"
 );
-INSERT INTO Usuarios VALUES (
-	813311718,
-    "Alex",
+INSERT INTO Usuarios (Nome, Sobrenome, Funcao, Login, Senha, URIFotoUsuario) VALUES (
+	"Alex",
     "Gomes Araujo",
     "Instrutor de Laboratório",
     "alexaraujo@unb.br",
     "88738c910a06191a440839befc10fe58792dada7", -- Senha exemplo: "Lunar.Eclipse@0822" criptografada com SHA1
     "Alex Gomes Araujo"
 );
-INSERT INTO Usuarios VALUES (
-	291534041,
-    "Nicole",
+INSERT INTO Usuarios (Nome, Sobrenome, Funcao, Login, Senha, URIFotoUsuario) VALUES (
+	"Nicole",
     "Rodrigues dos Santos",
     "Professor",
     "ndossantos@unb.br",
@@ -134,41 +145,34 @@ INSERT INTO Usuarios VALUES (
     "Davi Fernandes Gomes"
 );
 
-
--- Criação da tabela Empréstimos
-CREATE TABLE Emprestimos (
-    ID INT PRIMARY KEY,
-    IDUsuario BIGINT,
-    IDItem INT,
-    DataEmprestimo DATE,
-    DataDevolucaoPrevista DATE,
-    Status VARCHAR(20),
-    FOREIGN KEY (IDUsuario) REFERENCES Usuarios(ID),
-    FOREIGN KEY (IDItem) REFERENCES MateriaisDidaticos(ID)
-);
 -- Inserção de linhas na tabela Emprestimos
-INSERT INTO Emprestimos VALUES (
-	235,
-    20200115678,
-    3,
+-- Inserção de linhas na tabela Emprestimos
+INSERT INTO Emprestimos (IDUsuario, TipoEmprestimo, ISBNLivro, IDMaterialDidatico, DataEmprestimo, DataDevolucaoPrevista, Status) VALUES (
+    1,
+    'Livro',
+    '9788582604618',
+    NULL,
     '2022-04-22',
     '2022-05-22',
-    "Devolvido"
-);
-INSERT INTO Emprestimos VALUES (
-	444,
-    20200115678,
-    1,
-    '2023-11-10',
-    '2023-12-10',
-    "Emprestado"
-);
-INSERT INTO Emprestimos VALUES (
-	350,
-    813311718,
-    2,
-    '2022-09-15',
-    '2022-10-15',
-    "Não devolvido"
+    'Devolvido'
 );
 
+INSERT INTO Emprestimos (IDUsuario, TipoEmprestimo, ISBNLivro, IDMaterialDidatico, DataEmprestimo, DataDevolucaoPrevista, Status) VALUES (
+    2,
+    'Livro',
+    '9786587322117',
+    NULL,
+    '2023-11-10',
+    '2023-12-10',
+    'Emprestado'
+);
+
+INSERT INTO Emprestimos (IDUsuario, TipoEmprestimo, ISBNLivro, IDMaterialDidatico, DataEmprestimo, DataDevolucaoPrevista, Status) VALUES (
+    3,
+    'MaterialDidatico',
+    NULL,
+    1, -- Suponhamos que o ID do material didático desejado é 1 (ajuste conforme necessário)
+    '2022-09-15',
+    '2022-10-15',
+    'Emprestado'
+);
