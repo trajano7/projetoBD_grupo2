@@ -6,13 +6,16 @@
 
 
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 import mysql.connector
 from flask_bcrypt import Bcrypt
 
-app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})  # Substitua com o seu domínio
-bcrypt = Bcrypt(app)
+# Configuração de cabeçalhos CORS manualmente
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
 
 #Necessario banco mysql já com o banco a ser utilizado criado e rodando. Colocar os dados de acesso do mesmo abaixo antes de inicializar:
 
@@ -20,7 +23,7 @@ bcrypt = Bcrypt(app)
 db_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'root',
+    'password': '123',
     'database': 'Laboratorio',
     'ssl_disabled': True,
 }
