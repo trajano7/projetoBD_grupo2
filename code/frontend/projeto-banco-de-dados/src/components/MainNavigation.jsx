@@ -50,7 +50,7 @@ function MainNavigation() {
     <header className={classes.header}>
       <div className={classes.nav}>
         <NavLink to="/" className={classes.title} end>
-          <h1>Collection</h1>
+          <h1>Laboratório</h1>
         </NavLink>
         <nav>
           <ul className={classes.list}>
