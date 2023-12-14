@@ -11,7 +11,7 @@ import mysql.connector
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})  # Substitua com o seu domínio
 bcrypt = Bcrypt(app)
 
 #Necessario banco mysql já com o banco a ser utilizado criado e rodando. Colocar os dados de acesso do mesmo abaixo antes de inicializar:
