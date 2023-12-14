@@ -145,7 +145,15 @@ INSERT INTO Usuarios (Nome, Sobrenome, Funcao, Login, Senha, URIFotoUsuario) VAL
     "Davi Fernandes Gomes"
 );
 
--- Inserção de linhas na tabela Emprestimos
+INSERT INTO Usuarios (Nome, Sobrenome, Funcao, Login, Senha, URIFotoUsuario) VALUES (
+	"Administrador",
+    "User",
+    "Administrador",
+    "admin@email.com",
+    "$2b$12$jreYexfWZqMZrvnbetVOzeMcW5Rja8WgKvE5DW58tjQET9AvE/KIa", -- Senha exemplo: "Prototipo#Atomico.5789" criptografada com SHA1
+    "Davi Fernandes Gomes"
+);
+
 -- Inserção de linhas na tabela Emprestimos
 INSERT INTO Emprestimos (IDUsuario, TipoEmprestimo, ISBNLivro, IDMaterialDidatico, DataEmprestimo, DataDevolucaoPrevista, Status) VALUES (
     1,
