@@ -92,38 +92,85 @@ let x = 0;
 
 export const fetchSearchedData = (searchInfo) => {
   return async (dispatch) => {
+    dispatch(
+      searchResultActions.setSearchStatus({
+        status: "loading",
+      })
+    );
+
+    console.log(searchInfo);
+
     const fetchData = async () => {
-      const response = await fetch("http://127.0.0.1:5000/livros");
-      if (!response.ok) {
-        throw new Error("Could not login!");
+      let categoria = "/livros/busca";
+      let search = {
+        name: searchInfo.name,
+        filtro: searchInfo.filtro,
+      };
+      if (searchInfo.categoria === "Recursos") {
+        categoria = "/materiais/busca";
+        search = { name: searchInfo.name };
       }
+      const response = await fetch(`http://127.0.0.1:5000/${categoria}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Defina o tipo de mídia como JSON ou conforme necessário
+        },
+        body: JSON.stringify(search),
+      });
+      if (!response.ok) {
+        throw new Error("Could not fetch materials");
+      }
+
+      const data = await response.json();
+
+      return data;
     };
 
     try {
-      const searchResponse = await fetchData();
-      dispatch(searchResultActions.setResultsList(searchResponse));
+      const searchResponseData = await fetchData();
+      console.log("Teste: ", searchResponseData);
+      if (searchInfo.categoria === "Livros") {
+        dispatch(
+          searchResultActions.setResultsList(
+            searchResponseData.map((result) => ({
+              ID: result.ID,
+              titulo: result.Titulo,
+              autor: result.Autor,
+              isbn: result.ISBN,
+              data_aquisicao: result.DataAquisicao,
+              estado: result.EstadoConservacao,
+              localizacao: result.LocalizacaoFisica,
+              uri: result.URICapaLivro,
+              descricao: result.Descricao,
+              categora: result.Categoria,
+            }))
+          )
+        );
+      } else {
+        dispatch(
+          searchResultActions.setResultsList(
+            searchResponseData.map((result) => ({
+              ID: result.ID,
+              ndeserie: result.NumeroSerie,
+              data_aquisicao: result.DataAquisicao,
+              estado: result.EstadoConservacao,
+              localizacao: result.LocalizacaoFisica,
+              uri: result.URIFotoMaterial,
+              descricao: result.Descricao,
+              categora: result.Categoria,
+            }))
+          )
+        );
+      }
     } catch (error) {
+      console.log("error", error);
       dispatch(
-        uiActions.showNotifications({
+        searchResultActions.setSearchStatus({
           status: "error",
-          title: "Error!",
-          message: error,
+          message: "could not fetch materials",
         })
       );
     }
-    //Faz o fetch do post, verifca erros, etc...
-    //Try catch
-    console.log(searchInfo);
-    // if (x === 0) {
-    //   dispatch(
-    //     searchResultActions.setSearchStatus({
-    //       status: 'loading',
-    //     })
-    //   );
-    //   x = 1;
-    //   return;
-    // }
-    // dispatch(searchResultActions.setResultsList(DUMMY_RESULTS2));
   };
 };
 
@@ -148,19 +195,38 @@ export const deleteItem = (itemID) => {
   };
 };
 
-export const reserveItem = (itemID) => {
+export const reserveItem = (itemInfo) => {
   return async (dispatch) => {
-    if (erro) {
-      console.log("erro");
+    const fetchData = async () => {
+      const response = await fetch(`http://127.0.0.1:5000/emprestimos`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Defina o tipo de mídia como JSON ou conforme necessário
+        },
+        body: JSON.stringify({
+          itemInfo
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Could not reserve");
+      }
+
+      const data = await response.json();
+
+      return data;
+    };
+
+    try {
+      const searchResponseData = await fetchData();
+      // dispatch(searchResultActions.reserveItem(itemInfo.ID));
+    } catch (error) {
+      console.log("error", error);
       dispatch(
         searchResultActions.setSearchStatus({
           status: "error",
-          message:
-            "Não foi possível reservar o item. Ele está emprestado no momento.",
+          message: "could not reserve material",
         })
       );
-      return;
     }
-    dispatch(searchResultActions.reserveItem(itemID));
   };
 };

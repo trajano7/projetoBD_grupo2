@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useInput from "../hooks/use-input";
 import Input from "./Input";
 import classes from "./LoginForm.module.css";
@@ -6,9 +6,20 @@ import Button from "./UI/Button";
 import { uiActions } from "../store/ui-slice";
 import { loginActions } from "../store/login-slice";
 import { login } from "../store/login-actions";
+import { useEffect } from "react";
 
 const LoginForm = (props) => {
+  const invalidLoginFlag = useSelector((state) => state.login.invalidLogin.invalidLoginFlag);
+  const invalidLoginMessage = useSelector((state) => state.login.invalidLogin.message);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (invalidLoginFlag) {
+      console.log('invalid', invalidLoginFlag, invalidLoginMessage)
+      window.alert(invalidLoginMessage);
+      dispatch(loginActions.setInvalidLogin({ invalidLoginFlag: false, message: 'none'}))
+    }
+  }, [invalidLoginFlag, invalidLoginMessage])
 
   const {
     value: enteredUsername,

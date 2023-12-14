@@ -27,9 +27,9 @@ const itensCadastro = [
 function MainNavigation() {
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const userRole = useSelector((state) => state.login.userInfo.cargo);
+  const userID = useSelector((state) => state.login.userInfo.id);
   const dispatch = useDispatch();
   const location = useLocation();
-  console.log(location.pathname);
 
   let isAdmin = "";
   let isChefe = "";
@@ -121,7 +121,7 @@ function MainNavigation() {
               <>
                 <li>
                   <NavLink
-                    to="/meuPerfil"
+                    to={`/meuPerfil/${userID}`}
                     className={({ isActive }) =>
                       isActive ? classes.active : undefined
                     }

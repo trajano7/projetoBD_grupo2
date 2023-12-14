@@ -4,28 +4,30 @@ const loginSlice = createSlice({
   name: "login",
   initialState: {
     isLoggedIn: true,
-    // userInfo: { name: "Affonso", cargo: "Administrador" },
-    // userInfo: { name: "Affonso", cargo: "Chefe de Laboratório" },
-    // userInfo: {
-    //   id: "",
-    //   nome: "",
-    //   sobrenome: "",
-    //   username: "",
-    //   cargo: "",
-    //   uri: "",
-    // },
+    invalidLogin: {
+      invalidLoginFlag: false,
+      message: "none",
+    },
     userInfo: {
-      id: "1",
-      nome: "João",
-      sobrenome: "Silva",
-      username: "joao.silva",
-      cargo: "Chefe de Laboratório",
-      uri: "https://exemplo.com/perfil1",
-    }
+      id: "",
+      nome: "",
+      sobrenome: "",
+      username: "",
+      cargo: "Administrador",
+      uri: "",
+    },
   },
   reducers: {
+    setInvalidLogin(state, action) {
+      console.log('payload', action.payload)
+      state.invalidLogin = action.payload;
+    },
     login(state, action) {
       // atributir informacoes do usuario
+      state.invalidLogin = {
+        invalidLoginFlag: false,
+        message: "none",
+      };
       state.isLoggedIn = true;
       state.userInfo = action.payload;
     },

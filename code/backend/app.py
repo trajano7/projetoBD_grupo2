@@ -10,6 +10,7 @@ import mysql.connector
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 # Configuração de cabeçalhos CORS manualmente
 @app.after_request
 def after_request(response):
@@ -24,7 +25,7 @@ def after_request(response):
 db_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': 'root',
+    'password': '123',
     'database': 'Laboratorio',
     'ssl_disabled': True,
 }
@@ -78,9 +79,21 @@ def login():
         return jsonify({"message": "Credenciais inválidas"}), 401
 
     # Autenticação bem-sucedida
-    # Aqui é possível gerar um token JWT ou criar uma sessão de usuário, dependendo da abordagem de autenticação.
+    # Modifique o JSON de resposta para incluir informações do usuário
+    response_data = {
+        "message": "Login bem-sucedido",
+        "user": {
+            "ID": usuario['ID'],
+            "Nome": usuario['Nome'],
+            "Sobrenome": usuario['Sobrenome'],
+            "Funcao": usuario['Funcao'],
+            "Login": usuario['Login'],
+            "URIFotoUsuario": usuario['URIFotoUsuario']
+            # Adicione outros campos conforme necessário
+        }
+    }
 
-    return jsonify({"message": "Login bem-sucedido"}), 200
+    return jsonify(response_data), 200
 ######### CRUD USUARIOS
 
 # Rota para criar um usuário
@@ -324,6 +337,51 @@ def obter_livro_por_isbn(isbn):
         return livro_dict
     else:
         return None
+    
+# Rota para buscar livros por título, autor ou ambos
+@app.route('/livros/busca', methods=['POST'])
+def buscar_livros():
+    data = request.get_json()
+
+    name = data.get('name', '')
+    filtro = data.get('filtro', 'Ambos')
+
+    livros = buscar_livros_db(name, filtro)
+    
+    return jsonify(livros)
+
+# Função para buscar livros no banco de dados
+def buscar_livros_db(name, filtro):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    if filtro == 'Titulo':
+        cursor.execute("SELECT * FROM Livros WHERE Titulo LIKE %s", ('%' + name + '%',))
+    elif filtro == 'Autor':
+        cursor.execute("SELECT * FROM Livros WHERE Autor LIKE %s", ('%' + name + '%',))
+    else:  # Caso filtro seja 'Ambos'
+        cursor.execute("SELECT * FROM Livros WHERE Titulo LIKE %s OR Autor LIKE %s", ('%' + name + '%', '%' + name + '%'))
+
+    livros = cursor.fetchall()
+
+    connection.close()
+
+    lista_livros = []
+    for livro in livros:
+        livro_dict = {
+            'ISBN': livro[0],
+            'Titulo': livro[1],
+            'Autor': livro[2],
+            'Descricao': livro[3],
+            'Categoria': livro[4],
+            'DataAquisicao': livro[5].strftime('%Y-%m-%d'),
+            'EstadoConservacao': livro[6],
+            'LocalizacaoFisica': livro[7],
+            'URICapaLivro': livro[8]
+        }
+        lista_livros.append(livro_dict)
+
+    return lista_livros
 
 # Rota para atualizar um livro pelo ISBN
 @app.route('/livros/<string:isbn>', methods=['PUT'])
@@ -491,6 +549,43 @@ def obter_material_didatico_por_id(material_id):
         return material_didatico_dict
     else:
         return None
+
+# Rota para buscar materiais didáticos por descrição
+@app.route('/materiais/busca', methods=['POST'])
+def buscar_materiais():
+    data = request.get_json()
+
+    descricao = data.get('name', '')
+
+    materiais = buscar_materiais_db(descricao)
+    
+    return jsonify(materiais)
+
+# Função para buscar materiais didáticos no banco de dados por descrição
+def buscar_materiais_db(descricao):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT * FROM MateriaisDidaticos WHERE Descricao LIKE %s", ('%' + descricao + '%',))
+    materiais = cursor.fetchall()
+
+    connection.close()
+
+    lista_materiais = []
+    for material in materiais:
+        material_dict = {
+            'ID': material[0],
+            'Descricao': material[1],
+            'Categoria': material[2],
+            'NumeroSerie': material[3],
+            'DataAquisicao': material[4].strftime('%Y-%m-%d'),
+            'EstadoConservacao': material[5],
+            'LocalizacaoFisica': material[6],
+            'URIFotoMaterial': material[7]
+        }
+        lista_materiais.append(material_dict)
+
+    return lista_materiais
 
 # Rota para atualizar um material didático pelo ID
 @app.route('/materiaisdidaticos/<int:material_id>', methods=['PUT'])

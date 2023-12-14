@@ -99,13 +99,6 @@ const BookForm = (props) => {
   const submitFormHandler = (event) => {
     event.preventDefault();
 
-    if (!/^C\dP\d$/.test(enteredLocation.toUpperCase())) {
-      window.alert(
-        "A loacalização deve ter o seguinte formato: CXPY, sendo X e Y o número do corredor e número da prateleira, respectivamente."
-      );
-      return;
-    }
-
     if (!valuesIsValid) {
       window.alert("Há um ou mais dados inválidos.");
       return;
@@ -233,7 +226,7 @@ const BookForm = (props) => {
             id="URI"
             type="url"
             name="URI"
-            label="Foto de Perfíl (URI)"
+            label="Foto do Livro (URI)"
             value={enteredURI}
             onChange={URIChangedHandler}
             onBlur={URIBlurHandler}
@@ -317,27 +310,44 @@ export default BookForm;
 export async function action({ request, params }) {
   const data = await request.formData();
 
-  console.log(data.get("date"));
-  console.log(data.get("title"));
-  console.log(data.get("author"));
-  console.log(data.get("isbn"));
-  console.log(data.get("location"));
-  console.log(data.get("URI"));
-  console.log(data.get("estado"));
-  console.log(data.get("description"));
+  // console.log(data.get("date"));
+  // console.log(data.get("title"));
+  // console.log(data.get("author"));
+  // console.log(data.get("isbn"));
+  // console.log(data.get("location"));
+  // console.log(data.get("URI"));
+  // console.log(data.get("estado"));
+  // console.log(data.get("description"));
 
-  //   const info = {
-  //     title: data.get("title"),
-  //     author: data.get("author"),
-  //     isbn: data.get("isbn"),
-  //     data: data.get("data"),
-  //     location: data.get("location"),
-  //     URI: data.get("URI"),
-  //     estado: data.get("estado"),
-  //     description: data.get("description"),
-  //   }
+  const method = request.method;
+  const bookData = {
+    ISBN: data.get("isbn"),
+    Titulo: data.get("title"),
+    Autor: data.get("author"),
+    Descricao: data.get("description"),
+    Categoria: "Livro",
+    DataAquisicao: data.get("date"),
+    EstadoConservacao: data.get("estado"),
+    LocalizacaoFisica: data.get("location"),
+    URICapaLivro: data.get("URI")
+  };
 
-  //   consolo.log(info);
+  let url = "http://127.0.0.1:5000/livros";
+  const response = await fetch(url, {
+    method: method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(bookData),
+  });
 
-  return { message: "Cadastrado com sucesso!" };
+  // if (response.status === 422) {
+  //   return response;
+  // }
+
+  if (!response.ok) {
+    throw json({ message: "Could not save event." }, { status: 500 });
+  }
+
+  return response;
 }

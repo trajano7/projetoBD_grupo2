@@ -9,14 +9,14 @@ function formatarData(data) {
 }
 
 const BorrowedItem = (props) => {
-  const dataEmprestimo = new Date(props.data_emprestimo);
-  const dataDevolucao = new Date(props.data_devolucao);
+  const dataEmprestimo = new Date(props.DataEmprestimo);
+  const dataDevolucao = new Date(props.DataDevolucaoPrevista);
 
   let resultCategory = (
     <>
-      <h3>{props.titulo}</h3>
+      <h3>{props.Livro.Titulo}</h3>
       <div className={classes["book-info"]}>
-        {`${props.autor}, ISBN: ${props.isbn}`}
+        {`${props.Livro.Autor}, ISBN: ${props.Livro.ISBN}`}
       </div>
     </>
   );
@@ -24,7 +24,7 @@ const BorrowedItem = (props) => {
   if (!props.isBookResult) {
     resultCategory = (
       <div className={classes["details-title"]}>
-        {`Número de Série: ${props.ndeserie}`}
+        {`Número de Série: ${props.MaterialDidatico.NumeroSerie}`}
       </div>
     );
   }
@@ -54,7 +54,7 @@ const BorrowedItem = (props) => {
           </div>
           <div>
             <div className={classes["details-title"]}>Status</div>
-            <div>{props.status}</div>
+            <div>{props.Status}</div>
           </div>
         </div>
       </div>

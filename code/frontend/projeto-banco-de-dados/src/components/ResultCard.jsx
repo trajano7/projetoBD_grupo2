@@ -59,11 +59,32 @@ const ResultCard = (props) => {
     }
   };
 
+  let dataHoje = new Date();
+  let dataHojeStr = dataHoje.toISOString().split('T')[0];
+
+  let dataFutura = new Date();
+  dataFutura.setDate(dataFutura.getDate() + 5);
+  let dataFuturaStr = dataFutura.toISOString().split('T')[0];
+
   const reserveItemHandler = () => {
     if (props.categoria === "Livro") {
-      dispatch(reserveItem(props.isbn));
+      dispatch(reserveItem({
+        IDUsuario: loginInfo.id,
+        TipoEmprestimo: 'Livro',
+        ISBNLivro: props.isbn,
+        DataEmprestimo: dataHojeStr,
+        DataDevolucaoPrevista: dataFuturaStr,
+        Status: "Emprestado"
+      }));
     } else {
-      dispatch(reserveItem(props.ndeserie));
+      dispatch(reserveItem({
+        IDUsuario: loginInfo.id,
+        TipoEmprestimo: 'MaterialDidatico',
+        IDMaterialDidatico: props.ID,
+        DataEmprestimo: dataHojeStr,
+        DataDevolucaoPrevista: dataFuturaStr,
+        Status: "Emprestado"
+      }));
     }
   };
 
@@ -102,21 +123,20 @@ const ResultCard = (props) => {
         {canDelete && (
           <Button
             onClick={deleteItemHandler}
-            disabled={!materialDisponivel}
             className={classes["delete-button"]}
           >
             Deletar
           </Button>
         )}
-        <Button onClick={reserveItemHandler} disabled={!materialDisponivel}>
+        <Button onClick={reserveItemHandler}>
           Reservar
         </Button>
       </div>
-      {!materialDisponivel && (
+      {/* {!materialDisponivel && (
         <p style={{ fontSize: 0.8 + "rem" }}>
           Este material não está disponível no momento.
         </p>
-      )}
+      )} */}
     </div>
   );
 };

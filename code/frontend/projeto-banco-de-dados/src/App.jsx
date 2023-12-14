@@ -11,7 +11,9 @@ import NewBookPage from "./pages/NewBook";
 import { action as newBookAction } from "./components/BookForm";
 import NewMaterialPage from "./pages/NewMaterial";
 import { action as newMaterialAction } from "./components/MaterialForm";
-import MyProfilePage, { loader as borrowedItemsLoader } from "./pages/MyProfile";
+import MyProfilePage, {
+  loader as borrowedItemsLoader,
+} from "./pages/MyProfile";
 import ManageUsersPage from "./pages/ManageUsers";
 import EditUserPage from "./pages/EditUser";
 
@@ -29,9 +31,13 @@ const router = createBrowserRouter([
         element: <NewMaterialPage />,
         action: newMaterialAction,
       },
-      { path: "/meuPerfil", element: <MyProfilePage />, loader: borrowedItemsLoader },
+      {
+        path: "/meuPerfil/:userID",
+        element: <MyProfilePage />,
+        loader: borrowedItemsLoader,
+      },
       { path: "/gerenciarUsuarios", element: <ManageUsersPage /> },
-      { path: "/gerenciarUsuarios/:userID", element: <EditUserPage />}
+      { path: "/gerenciarUsuarios/:userID", element: <EditUserPage /> },
     ],
   },
 ]);

@@ -15,7 +15,7 @@ const BorrowedItems = (props) => {
           {props.results.map((result) => {
             let itemKey = "";
             let isBookResult = false;
-            if (result.hasOwnProperty("isbn")) {
+            if (result.Livro.hasOwnProperty("ISBN")) {
               itemKey = result.isbn;
               isBookResult = true;
             } else {

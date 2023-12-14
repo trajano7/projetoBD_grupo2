@@ -272,10 +272,38 @@ const UserForm = (props) => {
 export default UserForm;
 
 export async function action({ request, params }) {
+  const method = request.method;
   const data = await request.formData();
+  const userData = {
+    Nome: data.get("name"),
+    Sobrenome: data.get("surname"),
+    Login: data.get("username"),
+    Senha: data.get("password"),
+    URIFotoUsuario: data.get("URI"),
+    Funcao: data.get("role"),
+  };
+
+  let url = "http://127.0.0.1:5000/usuarios";
+  const response = await fetch(url, {
+    method: method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+  });
+
+  if (response.status === 422) {
+    return response;
+  }
+
+  if (!response.ok) {
+    throw json({ message: "Could not save event." }, { status: 500 });
+  }
+
+  //return redirect('/events');
 
   console.log("teste");
   console.log(data.get("name"));
 
-  return { message: "Cadastrado com sucesso!" };
+  return response;
 }

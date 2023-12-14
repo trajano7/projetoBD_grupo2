@@ -64,34 +64,35 @@ export default MyProfilePage;
 
 const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 
-async function loadBorrowedItems() {
-  // const response = await fetch("http://localhost:8080/events");
+async function loadBorrowedItems(id) {
+  const response = await fetch(`http://127.0.0.1:5000/emprestimos/usuario/${id}`);
 
-  // if (!response.ok) {
-  //   //throw { message: "Could not fetch events." };
-  //   throw json(
-  //     { message: "Could not fetch events." },
-  //     {
-  //       status: 500,
-  //     }
-  //   );
+  if (response.status === 404) {
+    return [];
+  }
 
-  //   // new Response(JSON.stringify({ message: "Could not fetch events." }), {
-  //   //   status: 500,
-  //   // });
-  // } else {
-  //   // return response;
-  //   const resData = await response.json();
-  //   return resData.events;
-  // }
-  console.log('Iniciando busca')
-  new Promise((resolve) => setTimeout(resolve, 10000))
-  console.log('Encontrados')
-  return DUMMY_RESULTS;
+  if (!response.ok) {
+    //throw { message: "Could not fetch events." };
+    throw json(
+      { message: "Could not fetch events." },
+      {
+        status: 500,
+      }
+    );
+
+    // new Response(JSON.stringify({ message: "Could not fetch events." }), {
+    //   status: 500,
+    // });
+  } else {
+    const resData = await response.json();
+    return resData;
+  }
 }
 
-export function loader() {
+export function loader({ request, params }) {
+  const id = params.userID;
+
   return defer({
-    borrowedItems: loadBorrowedItems(),
+    borrowedItems: loadBorrowedItems(id),
   });
 }

@@ -1,12 +1,11 @@
 import { useFetcher, useNavigate } from "react-router-dom";
 import useInput from "../hooks/use-input";
 import Input from "./Input";
-import classes from "./BookForm.module.css";
+import classes from "./MaterialForm.module.css";
 import Button from "./UI/Button";
 import { useEffect } from "react";
-import Page from "./UI/Page";
 
-const BookForm = (props) => {
+const MaterialForm = (props) => {
   const navigate = useNavigate();
   const fetcher = useFetcher();
   const { data, state } = fetcher;
@@ -79,13 +78,6 @@ const BookForm = (props) => {
 
   const submitFormHandler = (event) => {
     event.preventDefault();
-
-    if (!/^C\dP\d$/.test(enteredLocation.toUpperCase())) {
-      window.alert(
-        "A loacalização deve ter o seguinte formato: CXPY, sendo X e Y o número do corredor e número da prateleira, respectivamente."
-      );
-      return;
-    }
 
     if (!valuesIsValid) {
       window.alert("Há um ou mais dados inválidos.");
@@ -176,7 +168,7 @@ const BookForm = (props) => {
               id="URI"
               type="url"
               name="URI"
-              label="Foto de Perfíl (URI)"
+              label="Foto do Material (URI)"
               value={enteredURI}
               onChange={URIChangedHandler}
               onBlur={URIBlurHandler}
@@ -230,7 +222,7 @@ const BookForm = (props) => {
           </div>
           <div className={classes["control"]}>
             <Input
-              label="Administrador"
+              label="Bem Conservado"
               selector={false}
               newClasses={classes.radio}
               id="bemconservado"
@@ -255,30 +247,68 @@ const BookForm = (props) => {
   );
 };
 
-export default BookForm;
+export default MaterialForm;
+
+// export async function action({ request, params }) {
+//   const method = request.method;
+//   const data = await request.formData();
+
+//   console.log('teste2')
+
+//   const eventData = {
+//     Descricao: data.get("description"),
+//     Categoria: "Material de laboratório",
+//     NumeroSerie: data.get("ndeserie"),
+//     DataAquisicao: data.get("date"),
+//     EstadoConservacao: data.get("estado"),
+//     LocalizacaoFisica: data.get("location"),
+//     URIFotoMaterial: data.get("URI"),
+//   };
+
+//   console.log(eventData)
+
+//   url = 'http://127.0.0.1:5000/materiaisdidaticos'
+//   const response = await fetch(url, {
+//     method: method,
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(eventData),
+//   });
+
+//   if (!response.ok) {
+//     throw json({ message: 'Ocorreu um erro no cadastro de material.' }, { status: 500 });
+//   }
+
+//   return response;
+// }
 
 export async function action({ request, params }) {
   const data = await request.formData();
 
-  console.log(data.get("date"));
-  console.log(data.get("ndeserie"));
-  console.log(data.get("location"));
-  console.log(data.get("URI"));
-  console.log(data.get("estado"));
-  console.log(data.get("description"));
+  const method = request.method;
+  const materialData = {
+    Descricao: data.get("description"),
+    Categoria: "Material de laboratório",
+    NumeroSerie: data.get("ndeserie"),
+    DataAquisicao: data.get("date"),
+    EstadoConservacao: data.get("estado"),
+    LocalizacaoFisica: data.get("location"),
+    URIFotoMaterial: data.get("URI"),
+  };
 
-  //   const info = {
-  //     title: data.get("title"),
-  //     author: data.get("author"),
-  //     isbn: data.get("isbn"),
-  //     data: data.get("data"),
-  //     location: data.get("location"),
-  //     URI: data.get("URI"),
-  //     estado: data.get("estado"),
-  //     description: data.get("description"),
-  //   }
+  let url = "http://127.0.0.1:5000/materiaisdidaticos";
+  const response = await fetch(url, {
+    method: method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(materialData),
+  });
 
-  //   consolo.log(info);
+  if (!response.ok) {
+    throw json({ message: "Could not save event." }, { status: 500 });
+  }
 
-  return { message: "Cadastrado com sucesso!" };
+  return response;
 }
