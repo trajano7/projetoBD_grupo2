@@ -132,6 +132,39 @@ def criar_usuario(dados_usuario):
 
     connection.commit()
     connection.close()
+    
+# Rota para obter todos os usuários
+@app.route('/usuarios', methods=['GET'])
+def obter_todos_usuarios():
+    # Obter a conexão com o banco de dados
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    # Executar a consulta para obter todos os usuários
+    cursor.execute("SELECT * FROM Usuarios")
+    usuarios = cursor.fetchall()
+
+    # Fechar a conexão com o banco de dados
+    connection.close()
+
+    # Verificar se há usuários e retornar a lista em formato JSON
+    if usuarios:
+        usuarios_list = []
+        for usuario in usuarios:
+            usuario_dict = {
+                "ID": usuario[0],
+                "Nome": usuario[1],
+                "Sobrenome": usuario[2],
+                "Funcao": usuario[3],
+                "Login": usuario[4],
+                "Senha": usuario[5],  
+                "URIFotoUsuario": usuario[6],
+            }
+            usuarios_list.append(usuario_dict)
+
+        return jsonify({"usuarios": usuarios_list})
+    else:
+        return jsonify({"message": "Nenhum usuário encontrado"}), 404
 
 # Rota para obter um usuário pelo ID
 @app.route('/usuarios/<int:usuario_id>', methods=['GET'])
