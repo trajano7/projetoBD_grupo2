@@ -280,7 +280,7 @@ const BookForm = (props) => {
         </div>
         <div className={classes["control"]}>
           <Input
-            label="Administrador"
+            label="Bem Conservado"
             selector={false}
             newClasses={classes.radio}
             id="bemconservado"
